@@ -24,6 +24,8 @@ module Crustache
 
       @text_io = StringIO.new
       @value_io = StringIO.new
+
+      @line_flag = true
     end
 
     def parse : Template
@@ -133,6 +135,7 @@ module Crustache
 
       if c = @io.read_byte
         if c == NEWLINE_N
+          @line_flag = true
           @row += 1
         end
         c
@@ -201,6 +204,7 @@ module Crustache
     end
 
     private def get_text : String
+      @line_flag = false
       @text_io.to_s.tap{@text_io.clear}
     end
 
@@ -208,7 +212,15 @@ module Crustache
       @value_io.to_s.tap{@value_io.clear}
     end
 
-    private def get_text_as_standalone : String
+    private def get_text_as_standalone
+      get_text_as_standalone_with_indent[0]
+    end
+
+    private def get_text_as_standalone_with_indent : {String, String}
+      unless @line_flag
+        return {get_text, ""}
+      end
+
       text = get_text
       i = text.length - 1
       while i >= 0
@@ -219,27 +231,28 @@ module Crustache
         when '\n'
           break
         else
-          return text
+          return {text, ""}
         end
       end
 
+      i += 1
       case peek
       when NEWLINE_N
         read
-        return text[0, i + 1]
+        return {text[0, i], text[i..-1]}
       when NEWLINE_R
         read
         if peek == NEWLINE_N
           read
-          return text[0, i + 1]
+          return {text[0, i], text[i..-1]}
         else
           @text_io.write_byte NEWLINE_R
-          return text
+          return {text, ""}
         end
       when nil
-        return text[0, i + 1]
+        return {text[0, i], text[i..-1]}
       else
-        return text
+        return {text, ""}
       end
     end
   end
