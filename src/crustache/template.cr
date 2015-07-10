@@ -43,11 +43,18 @@ module Crustache
     end
   {% end %}
 
-  {% for type in %w(Output Raw Partial Comment Text) %}
+  {% for type in %w(Output Raw Comment Text) %}
     class {{ type.id }} < Data
       include Tag
     end
   {% end %}
+
+  class Partial < Data
+    getter indent
+    getter value
+
+    def initialize(@indent : String, @value : String); end
+  end
 
   class Delim < Data
     getter open_tag
