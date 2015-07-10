@@ -1,19 +1,14 @@
+require "json"
 require "html"
 require "./parser.cr"
 require "./template.cr"
 require "./filesystem.cr"
 
 module Crustache
-  alias Context = Nil | Int32 | Int64 | Float64 | String | Bool | Hash(String, Context) | Array(Context) | (String -> String) | (-> String)
+  alias Context = JSON::Type | Hash(String, Context) | Array(Context) | (String -> String) | (-> String)
 
   class Renderer
     def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array(Context), @fs : FileSystem, @out_io : IO)
-      @open_tag_default = @open_tag
-      @close_tag_default = @close_tag
-    end
-
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), context : Context, @fs : FileSystem, @out_io : IO)
-      @context_stack = [context] of Context
       @open_tag_default = @open_tag
       @close_tag_default = @close_tag
     end
@@ -61,6 +56,7 @@ module Crustache
     end
 
     def output(o : Output)
+      (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = context_lookup o.value
         if value.is_a?(-> String)
           io = StringIO.new value.call
@@ -72,9 +68,11 @@ module Crustache
           @out_io << HTML.escape value.to_s
         end
       end
+      (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
     end
 
     def raw(r : Raw)
+      (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = context_lookup r.value
         if value.is_a?(-> String)
           io = StringIO.new value.call
@@ -86,11 +84,12 @@ module Crustache
           @out_io << value.to_s
         end
       end
+      (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
     end
 
     def partial(p : Partial)
       if part = @fs.load p.value
-        part.visit(self)
+        part.visit(Renderer.new @open_tag_default, @close_tag_default, @context_stack, @fs, IndentIO.new(p.indent, @out_io))
       end
     end
 
@@ -124,7 +123,7 @@ module Crustache
         while i < len
           val = vals[i]
           case
-          when ctx.is_a?(Array(Context))
+          when ctx.is_a?(Array)
             if v = val.to_i?
               if 0 <= v && v < ctx.length
                 ctx = ctx[v]
@@ -135,7 +134,7 @@ module Crustache
               break
             end
 
-          when ctx.is_a?(Hash(String, Context))
+          when ctx.is_a?(Hash)
             if ctx.has_key?(val)
               ctx = ctx[val]
             else
@@ -154,6 +153,44 @@ module Crustache
       end
 
       nil
+    end
+
+    class IndentIO
+      include IO
+
+      def initialize(@indent : String, @io : IO)
+        @indent_flag = 0
+        @eol_flag = true
+      end
+
+      def indent_flag_on
+        @indent_flag -= 1
+      end
+
+      def indent_flag_off
+        @indent_flag += 1
+      end
+
+      def write(s : Slice(UInt8), len)
+        start = 0
+        i = 0
+        while i < len
+          if @eol_flag
+            @io << @indent
+            @eol_flag = false
+          end
+
+          if s[i] == Parser::NEWLINE_N && @indent_flag == 0
+            @eol_flag = true
+            @io.write (s + start), (i - start) + 1
+            start = i + 1
+          end
+
+          i += 1
+        end
+
+        @io.write (s + start), (i - start)
+      end
     end
   end
 end
