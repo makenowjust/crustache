@@ -12,13 +12,13 @@ module Crustache
     Parser.new(OPEN_TAG, CLOSE_TAG, io, filename, row).parse
   end
 
-  def self.render(tmpl : Template, ctx : Context, fs = FileSystem.new)
+  def self.render(tmpl : Template, ctx, fs = FileSystem.new)
     String.build do |io|
       self.render tmpl, ctx, fs, io
     end
   end
 
-  def self.render(tmpl : Template, ctx : Context, fs : FileSystem, io : IO)
-    tmpl.visit Renderer.new OPEN_TAG, CLOSE_TAG, [ctx] of Context, fs, io
+  def self.render(tmpl : Template, ctx, fs : FileSystem, io : IO)
+    tmpl.visit Renderer.new OPEN_TAG, CLOSE_TAG, [ctx], fs, io
   end
 end

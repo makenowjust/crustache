@@ -11,7 +11,7 @@ def spec_json(filename)
       it test["desc"] do
         template = Crustache.parse (test["template"] as String)
         expected = test["expected"]
-        data = test["data"] as Hash(String, JSON::Type)
+        data = test["data"]
         fs = Crustache::FileSystem.new
         if test.has_key?("partials")
           (test["partials"] as Hash(String, JSON::Type)).each do |name, tmpl|

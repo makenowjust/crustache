@@ -5,10 +5,8 @@ require "./template.cr"
 require "./filesystem.cr"
 
 module Crustache
-  alias Context = JSON::Type | Hash(String, Context) | Array(Context) | (String -> String) | (-> String)
-
   class Renderer
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array(Context), @fs : FileSystem, @out_io : IO)
+    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array, @fs : FileSystem, @out_io : IO)
       @open_tag_default = @open_tag
       @close_tag_default = @close_tag
     end
@@ -104,13 +102,13 @@ module Crustache
       @close_tag = d.close_tag
     end
 
-    private def context_scope(ctx : Context, &block)
+    private def context_scope(ctx, &block)
       @context_stack.unshift ctx
       block.call
       @context_stack.shift
     end
 
-    private def context_lookup(value : String) : Context
+    private def context_lookup(value : String)
       if value == "."
         return @context_stack[0]
       end
@@ -134,7 +132,7 @@ module Crustache
               break
             end
 
-          when ctx.is_a?(Hash)
+          when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
             if ctx.has_key?(val)
               ctx = ctx[val]
             else
