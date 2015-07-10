@@ -24,7 +24,7 @@ TODO: Write usage here for library
 
 ## Development
 
-TODO: Write instructions for development
+This library's specs are put in `spec` directory. They can run by `crystal spec` command.
 
 ## Contributing
 
