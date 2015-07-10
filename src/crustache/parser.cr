@@ -98,6 +98,14 @@ module Crustache
           tmpl << Text.new get_text_as_standalone
           tmpl << Comment.new get_value
 
+        when GT
+          read
+          parse_error "Unclosed tag" unless scan_until close_tag, @value_io
+
+          text, indent = get_text_as_standalone_with_indent
+          tmpl << Text.new text
+          tmpl << Partial.new indent, get_value.strip
+
         else             # output `{{value}}`
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
