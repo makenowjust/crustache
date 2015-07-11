@@ -7,4 +7,4 @@ install: |
   sudo apt-get install crystal
 
 script:
-  - crystal spec
+  - crystal spec ./spec/**_spec.cr
