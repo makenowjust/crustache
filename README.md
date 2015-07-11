@@ -4,6 +4,8 @@ crustache is the implementation of __[mustache](https://mustache.github.io/)__ l
 
 This library implemated [mustache's spec v1.1.2+λ](https://github.com/mustache/spec/tree/v1.1.2).
 
+[![Build Status](https://travis-ci.org/MakeNowJust/crustache.svg)](https://travis-ci.org/MakeNowJust/crustache)
+
 ## Installation
 
 Add it to `Projectfile`
