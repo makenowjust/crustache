@@ -1,4 +1,3 @@
-require "json"
 require "html"
 require "./parser.cr"
 require "./template.cr"
