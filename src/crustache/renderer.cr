@@ -29,10 +29,10 @@ module Crustache
           t = Template.new s.content
           t.visit Stringify.new @open_tag, @close_tag, io
           io = StringIO.new value.call io.to_s
-          t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
+          t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
           io.clear
-          t.visit(Renderer.new @open_tag_default, @close_tag_default, @context_stack, @fs, io)
-          @out_io << HTML.escape io.to_s
+          t.visit(Renderer.new @open_tag, @close_tag, @context_stack, @fs, io)
+          @out_io << io.to_s
 
         else
           context_scope value do
