@@ -173,14 +173,14 @@ module Crustache
         i = 0
         while i < len
           if @eol_flag
+            @io.write (s + start), (i - start)
             @io << @indent
             @eol_flag = false
+            start = i
           end
 
           if s[i] == Parser::NEWLINE_N && @indent_flag == 0
             @eol_flag = true
-            @io.write (s + start), (i - start) + 1
-            start = i + 1
           end
 
           i += 1
