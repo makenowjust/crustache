@@ -4,6 +4,7 @@ require "./template.cr"
 require "./filesystem.cr"
 
 module Crustache
+  # :nodoc:
   class Renderer
     def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array, @fs : FileSystem, @out_io : IO)
       @open_tag_default = @open_tag

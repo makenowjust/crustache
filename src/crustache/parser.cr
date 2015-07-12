@@ -1,6 +1,7 @@
 require "./template.cr"
 
 module Crustache
+  # :nodoc:
   class Parser
     CURLY_START = '{'.ord.to_u8
     CURLY_END = '}'.ord.to_u8

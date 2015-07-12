@@ -1,7 +1,9 @@
 require "./crustache/*"
 
 module Crustache
+  # :nodoc:
   OPEN_TAG = "{{".to_slice
+  # :nodoc:
   CLOSE_TAG = "}}".to_slice
 
   def self.parse(string : String, filename = "<inline>", row = 1)
