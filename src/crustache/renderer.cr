@@ -1,6 +1,6 @@
 require "html"
 require "./parser.cr"
-require "./template.cr"
+require "./tree.cr"
 require "./filesystem.cr"
 
 module Crustache
@@ -11,11 +11,11 @@ module Crustache
       @close_tag_default = @close_tag
     end
 
-    def template(t : Template)
+    def template(t : Tree::Template)
       t.content.each &.visit(self)
     end
 
-    def section(s : Section)
+    def section(s : Tree::Section)
       if value = context_lookup s.value
         case
         when value.is_a?(Array)
@@ -27,7 +27,7 @@ module Crustache
 
         when value.is_a?(String -> String)
           io = StringIO.new
-          t = Template.new s.content
+          t = Tree::Template.new s.content
           t.visit Stringify.new @open_tag, @close_tag, io
           io = StringIO.new value.call io.to_s
           t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
@@ -43,7 +43,7 @@ module Crustache
       end
     end
 
-    def invert(i : Invert)
+    def invert(i : Tree::Invert)
       if value = context_lookup i.value
         if value.is_a?(Array)
           i.content.each(&.visit(self)) if value.empty?
@@ -53,7 +53,7 @@ module Crustache
       end
     end
 
-    def output(o : Output)
+    def output(o : Tree::Output)
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = context_lookup o.value
         if value.is_a?(-> String)
@@ -69,7 +69,7 @@ module Crustache
       (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
     end
 
-    def raw(r : Raw)
+    def raw(r : Tree::Raw)
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = context_lookup r.value
         if value.is_a?(-> String)
@@ -85,19 +85,19 @@ module Crustache
       (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
     end
 
-    def partial(p : Partial)
+    def partial(p : Tree::Partial)
       if part = @fs.load p.value
         part.visit(Renderer.new @open_tag_default, @close_tag_default, @context_stack, @fs, IndentIO.new(p.indent, @out_io))
       end
     end
 
-    def comment(c : Comment); end
+    def comment(c : Tree::Comment); end
 
-    def text(t : Text)
+    def text(t : Tree::Text)
       @out_io << t.value
     end
 
-    def delim(d : Delim)
+    def delim(d : Tree::Delim)
       @open_tag = d.open_tag
       @close_tag = d.close_tag
     end

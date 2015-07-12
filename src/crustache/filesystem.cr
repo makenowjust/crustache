@@ -1,9 +1,13 @@
-require "./template.cr"
+require "./tree.cr"
 
 module Crustache
-  class FileSystem
+  abstract class FileSystem
+    abstract def load(value : String) : Tree::Template?
+  end
+
+  class HashFileSystem < FileSystem
     def initialize
-      @tmpls = {} of String => Template
+      @tmpls = {} of String => Tree::Template
     end
 
     def register(name, tmpl)

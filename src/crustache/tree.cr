@@ -1,4 +1,4 @@
-module Crustache
+module Crustache::Tree
   abstract class Data
     getter delimiter
     setter delimiter

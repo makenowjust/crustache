@@ -43,7 +43,7 @@ puts "describe #{filename.inspect} do"
 
   puts "      data = #{inspect_hash test["data"]}"
 
-  puts "      fs = Crustache::FileSystem.new"
+  puts "      fs = Crustache::HashFileSystem.new"
   if test.has_key?("partials")
     (test["partials"] as Hash(String, JSON::Type)).each do |name, tmpl|
       puts "      fs.register #{name.inspect}, Crustache.parse #{tmpl.inspect}"

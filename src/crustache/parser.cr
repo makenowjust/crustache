@@ -1,4 +1,4 @@
-require "./template.cr"
+require "./tree.cr"
 
 module Crustache
   # :nodoc:
@@ -29,9 +29,9 @@ module Crustache
       @line_flag = true
     end
 
-    def parse : Template
-      tmpl = Template.new
-      tmpl_stack = [] of Template | Section | Invert
+    def parse : Tree::Template
+      tmpl = Tree::Template.new
+      tmpl_stack = [] of Tree::Template | Tree::Section | Tree::Invert
       open_tag = @open_tag
       close_tag = @close_tag
 
@@ -44,15 +44,15 @@ module Crustache
           parse_error "Unclosed tag" unless scan_until CURLY_END_SLICE, @value_io
           parse_error "Unclosed tag" unless scan close_tag
 
-          tmpl << Text.new get_text
-          tmpl << Raw.new get_value.strip
+          tmpl << Tree::Text.new get_text
+          tmpl << Tree::Raw.new get_value.strip
 
         when EQ          # set delimiter `{{=| |=}}`
           read
           parse_error "Unclosed tag" unless scan_until EQ_SLICE, @value_io
           parse_error "Unclosed tag" unless scan close_tag
 
-          tmpl << Text.new(get_text_as_standalone)
+          tmpl << Tree::Text.new(get_text_as_standalone)
           value = get_value.strip
           delim = value.split(/\s+/, 2)
           parse_error "Invalid delmiter #{value.inspect}" if delim[0].match(/\s|=/)
@@ -60,29 +60,29 @@ module Crustache
 
           open_tag = delim[0].to_slice
           close_tag = delim[1].to_slice
-          tmpl << Delim.new open_tag, close_tag
+          tmpl << Tree::Delim.new open_tag, close_tag
 
         when HASH        # section open `{{#value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Text.new get_text_as_standalone
-          tmpl = Section.new(get_value.strip).tap{|t| tmpl_stack << (tmpl << t)}
+          tmpl << Tree::Text.new get_text_as_standalone
+          tmpl = Tree::Section.new(get_value.strip).tap{|t| tmpl_stack << (tmpl << t)}
 
         when HAT         # invert section open `{{^value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Text.new get_text_as_standalone
-          tmpl = Invert.new(get_value.strip).tap{|t| tmpl_stack << (tmpl <<  t)}
+          tmpl << Tree::Text.new get_text_as_standalone
+          tmpl = Tree::Invert.new(get_value.strip).tap{|t| tmpl_stack << (tmpl <<  t)}
 
         when SLASH       # section close `{{/value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Text.new get_text_as_standalone
+          tmpl << Tree::Text.new get_text_as_standalone
           value = get_value.strip
-          if tmpl_stack.empty? || value != (tmpl as Tag).value
+          if tmpl_stack.empty? || value != (tmpl as Tree::Tag).value
             parse_error "Unopened tag #{value.inspect}"
           end
           tmpl = tmpl_stack.pop
@@ -91,39 +91,39 @@ module Crustache
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Text.new get_text
-          tmpl << Raw.new get_value.strip
+          tmpl << Tree::Text.new get_text
+          tmpl << Tree::Raw.new get_value.strip
 
         when BANG        # comment `{{!value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Text.new get_text_as_standalone
-          tmpl << Comment.new get_value
+          tmpl << Tree::Text.new get_text_as_standalone
+          tmpl << Tree::Comment.new get_value
 
         when GT
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
           text, indent = get_text_as_standalone_with_indent
-          tmpl << Text.new text
-          tmpl << Partial.new indent, get_value.strip
+          tmpl << Tree::Text.new text
+          tmpl << Tree::Partial.new indent, get_value.strip
 
         else             # output `{{value}}`
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Text.new get_text
-          tmpl << Output.new get_value.strip
+          tmpl << Tree::Text.new get_text
+          tmpl << Tree::Output.new get_value.strip
 
         end
       end
 
       unless tmpl_stack.empty?
         save_row
-        parse_error "Unclosed section #{(tmpl as Tag).value.inspect}"
+        parse_error "Unclosed section #{(tmpl as Tree::Tag).value.inspect}"
       end
 
-      tmpl << Text.new get_text
+      tmpl << Tree::Text.new get_text
 
       tmpl
     end
