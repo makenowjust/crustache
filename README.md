@@ -7,11 +7,13 @@ This library implemated [mustache's spec v1.1.2+λ](https://github.com/mustache/
 [![travis-ci.org](https://img.shields.io/travis/MakeNowJust/crustache.svg?style=flat-square)](https://travis-ci.org/MakeNowJust/crustache)
 [![docrystal.org](http://www.docrystal.org/badge.svg)](http://www.docrystal.org/github.com/MakeNowJust/crustache)
 
-                            __             __
-      ____________  _______/ /_____ ______/ /_  ___
-     / ___/ ___/ / / / ___/ __/ __ `/ ___/ __ \/ _ \
-    / /__/ /  / /_/ (__  ) /_/ /_/ / /__/ / / /  __/
-    \___/_/   \__,_/____/\__/\__,_/\___/_/ /_/\___/
+```text
+                        __             __
+  ____________  _______/ /_____ ______/ /_  ___
+ / ___/ ___/ / / / ___/ __/ __ `/ ___/ __ \/ _ \
+/ /__/ /  / /_/ (__  ) /_/ /_/ / /__/ / / /  __/
+\___/_/   \__,_/____/\__/\__,_/\___/_/ /_/\___/
+```
 
 ## Installation
 
