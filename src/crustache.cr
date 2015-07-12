@@ -14,6 +14,10 @@ module Crustache
     Parser.new(OPEN_TAG, CLOSE_TAG, io, filename, row).parse
   end
 
+  def self.parseFile(filename : String) : Tree::Template
+    self.parse(File.new(filename), filename, 1)
+  end
+
   def self.render(tmpl : Tree::Template, model, fs = FileSystem.new) : String
     String.build do |io|
       self.render tmpl, model, fs, io
