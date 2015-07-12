@@ -35,7 +35,7 @@ TODO: Write usage here for library
 
 ## Development
 
-This library's specs are put in `spec` directory. They can run by `crystal spec ./spec/**_spec.cr` command.
+This library's specs are put in `spec` directory. They can run by `crystal spec ./spec/crustache_spec.cr` command.
 
 ## Contributing
 
