@@ -18,7 +18,7 @@ module Crustache
     self.parse(File.new(filename), filename, 1)
   end
 
-  def self.render(tmpl : Tree::Template, model, fs = FileSystem.new) : String
+  def self.render(tmpl : Tree::Template, model, fs = HashFileSystem.new) : String
     String.build do |io|
       self.render tmpl, model, fs, io
     end
