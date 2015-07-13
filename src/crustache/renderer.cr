@@ -5,8 +5,8 @@ require "./filesystem.cr"
 
 module Crustache
   # :nodoc:
-  class Renderer
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array, @fs : FileSystem, @out_io : IO)
+  class Renderer(M)
+    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array(M), @fs : FileSystem, @out_io : IO)
       @open_tag_default = @open_tag
       @close_tag_default = @close_tag
     end
@@ -102,10 +102,11 @@ module Crustache
       @close_tag = d.close_tag
     end
 
-    private def context_scope(ctx, &block)
+    private def context_scope(ctx : M)
       @context_stack.unshift ctx
-      block.call
+      yield
       @context_stack.shift
+      nil
     end
 
     private def context_lookup(value : String)
