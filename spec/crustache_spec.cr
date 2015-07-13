@@ -1,7 +1,7 @@
 require "./spec_helper"
 
 describe Crustache do
-  describe ".parse" do
+  describe "#parse" do
     it "shold parse a string" do
       Crustache.parse("Hello, {{Mustache}} World").should be_truthy
     end
@@ -17,7 +17,7 @@ describe Crustache do
     end
   end
 
-  describe ".parseFile" do
+  describe "#parseFile" do
     it "should parse a file" do
       Crustache.parse("#{__DIR__}/view/template.mustache").should be_truthy
     end
@@ -26,3 +26,4 @@ end
 
 require "./mustache_spec"
 require "./view_loader_spec"
+require "./engine_spec"
