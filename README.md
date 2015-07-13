@@ -29,9 +29,21 @@ end
 
 ```crystal
 require "crustache"
-```
 
-TODO: Write usage here for library
+# Define a type for model
+alias Model = String | Hash(String, Model)
+
+# Parse a mustache template
+template = Crustache.parse "Hello {{Name}} World!"
+
+# Make a model
+model = {} of String => Model
+model["Name"] = "Crustache"
+
+# Render!
+puts Crustache.render template, model as Model
+#=> Hello Crustache World!
+```
 
 ## Development
 
