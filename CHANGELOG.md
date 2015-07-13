@@ -2,14 +2,14 @@
 
 Features:
 
-  - Added `Crustache::Engine`. It is a wrapper class for typical usage. [`d813bd2`](https://github.com/MakeNowJust/crustache/commit/d813bd202336f4730cc704e1d607eca8618cb044)
-  - Added `Crustache::FileSystem#load!`. It is a strict version `load`. [`8a8683b`](https://github.com/MakeNowJust/crustache/commit/8a8683b193a257aa89c8a838d8f3e37037900f6d)
+  - Added `Crustache::Engine`. It is a wrapper class for typical usage [`d813bd2`](https://github.com/MakeNowJust/crustache/commit/d813bd202336f4730cc704e1d607eca8618cb044)
+  - Added `Crustache::FileSystem#load!`. It is a strict version `load` [`8a8683b`](https://github.com/MakeNowJust/crustache/commit/8a8683b193a257aa89c8a838d8f3e37037900f6d)
 
 Changes:
 
   - Now, `Crustache::Renderer` is generic class,
-    so you can use many model types in a program. [`ee5e258`](https://github.com/MakeNowJust/crustache/commit/ee5e258a54892d679efad03362ae34546c9645f3)
-  - Fixed `Crustache.render`'s argument `fs`'s bug. [`0f97690`](https://github.com/MakeNowJust/crustache/commit/0f97690c97c35df9cb157b602fb9b999c818449b)
+    so you can use many model types in a program [`ee5e258`](https://github.com/MakeNowJust/crustache/commit/ee5e258a54892d679efad03362ae34546c9645f3)
+  - Fixed `Crustache.render`'s argument `fs`'s bug [`0f97690`](https://github.com/MakeNowJust/crustache/commit/0f97690c97c35df9cb157b602fb9b999c818449b)
 
 ## v0.1.1 (2015-07-12)
 
