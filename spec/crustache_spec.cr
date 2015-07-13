@@ -22,6 +22,12 @@ describe Crustache do
       Crustache.parse("#{__DIR__}/view/template.mustache").should be_truthy
     end
   end
+
+  describe "#render" do
+    it "should render a template" do
+      Crustache.render(Crustache.parse("Test {{.}}"), "Test").should eq("Test Test")
+    end
+  end
 end
 
 require "./mustache_spec"
