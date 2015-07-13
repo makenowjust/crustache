@@ -1,7 +1,7 @@
 module Crustache
   class Engine
-    def initialize(@basedir : String, @cache = false)
-      self.initialize ViewLoader.new @basedir, @cache
+    def initialize(basedir : String, cache = false)
+      @fs = ViewLoader.new basedir, cache
     end
 
     def initialize(@fs : FileSystem); end
@@ -27,12 +27,12 @@ module Crustache
       @fs.load!(filename).try{|tmpl| self.render tmpl, model, output}
     end
 
-    def render(tmpl : Template, model)
+    def render(tmpl : Tree::Template, model)
       Crustache.render tmpl, model, @fs
     end
 
-    def render(tmpl : Template, model, output : IO)
-      Crustache.render tmpl, model, @fs, io
+    def render(tmpl : Tree::Template, model, output : IO)
+      Crustache.render tmpl, model, @fs, output
     end
   end
 end

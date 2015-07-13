@@ -3,6 +3,14 @@ require "./tree.cr"
 module Crustache
   abstract class FileSystem
     abstract def load(value : String) : Tree::Template?
+
+    def load!(value : String) : Tree::Template
+      if tmpl = self.load value
+        return tmpl
+      else
+        raise "#{value} is not found"
+      end
+    end
   end
 
   class HashFileSystem < FileSystem
