@@ -29,7 +29,3 @@ describe Crustache do
     end
   end
 end
-
-require "./mustache_spec"
-require "./view_loader_spec"
-require "./engine_spec"
