@@ -6,9 +6,19 @@ describe Crustache::ViewLoader do
     fs.load("template.mustache").should be_truthy
   end
 
-  it "should load a template file without extension" do
+  it "should load a template file without an extension" do
     fs = Crustache::ViewLoader.new "#{__DIR__}/view"
     fs.load("template").should be_truthy
+  end
+
+  it "should load a template file without an extension" do
+    fs = Crustache::ViewLoader.new "#{__DIR__}/view"
+    fs.load("template_html").should be_truthy
+  end
+
+  it "should load a template file without an extension" do
+    fs = Crustache::ViewLoader.new "#{__DIR__}/view", extension = [".test"]
+    fs.load("template_test").should be_truthy
   end
 
   it "should return nil if specified template file is not found" do
