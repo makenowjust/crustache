@@ -1,3 +1,13 @@
+## v0.2.1 (2015-07-15)
+
+Features:
+
+  - Added `extension` argument for `Crustache::ViewLoader`. It specify filename extensions of implicit loading [`8c69afc`](https://github.com/MakeNowJust/crustache/commit/8c69afc70cf40c6ea93329135d23af1dc4bab7ab)
+
+Changes:
+
+  - Added `spec/spec.cr` for running specs [`db86034`](https://github.com/MakeNowJust/crustache/commit/db86034c49b4bfcd1b793c03b663ebb8f915bcd6)
+
 ## v0.2.0 (2015-07-14)
 
 Features:
