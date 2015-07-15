@@ -7,4 +7,4 @@ install: |
   sudo apt-get install crystal
 
 script:
-  - crystal spec ./spec/crustache_spec.cr
+  - crystal spec ./spec/spec.cr
