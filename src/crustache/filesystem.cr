@@ -28,7 +28,9 @@ module Crustache
   end
 
   class ViewLoader < FileSystem
-    def initialize(@basedir : String, @use_cache = false)
+    EXTENSION = [".mustache", ".html", ""]
+
+    def initialize(@basedir : String, @use_cache = false, @extension = EXTENSION)
       @cache = {} of String => Tree::Template?
     end
 
@@ -37,18 +39,14 @@ module Crustache
         return @cache[value]
       end
 
-      filename = "#{@basedir}/#{value}"
-      filename_ext = "#{filename}.mustache"
-      if File.exists?(filename_ext)
-        tmpl = Crustache.parseFile filename_ext
-        @cache[value] = tmpl if @use_cache
-        return tmpl
-      end
-
-      if File.exists?(filename)
-        tmpl = Crustache.parse filename
-        @cache[value] = tmpl if @use_cache
-        return tmpl
+      @extension.each do |ext|
+        filename = "#{@basedir}/#{value}"
+        filename_ext = "#{filename}#{ext}"
+        if File.exists?(filename_ext)
+          tmpl = Crustache.parseFile filename_ext
+          @cache[value] = tmpl if @use_cache
+          return tmpl
+        end
       end
 
       @cache[value] = nil if @use_cache
