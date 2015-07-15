@@ -5,8 +5,8 @@ require "./filesystem.cr"
 
 module Crustache
   # :nodoc:
-  class Renderer(M)
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context_stack : Array(M), @fs : FileSystem, @out_io : IO)
+  class Renderer
+    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context : Context, @fs : FileSystem, @out_io : IO)
       @open_tag_default = @open_tag
       @close_tag_default = @close_tag
     end
@@ -32,7 +32,7 @@ module Crustache
           io = StringIO.new value.call io.to_s
           t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
           io.clear
-          t.visit(Renderer.new @open_tag, @close_tag, @context_stack, @fs, io)
+          t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
           @out_io << io.to_s
 
         else
@@ -60,7 +60,7 @@ module Crustache
           io = StringIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
           io.clear
-          t.visit(Renderer.new @open_tag_default, @close_tag_default, @context_stack, @fs, io)
+          t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
           @out_io << HTML.escape io.to_s
         else
           @out_io << HTML.escape value.to_s
@@ -76,7 +76,7 @@ module Crustache
           io = StringIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
           io.clear
-          t.visit(Renderer.new @open_tag_default, @close_tag_default, @context_stack, @fs, io)
+          t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
           @out_io << io.to_s
         else
           @out_io << value.to_s
@@ -87,7 +87,7 @@ module Crustache
 
     def partial(p : Tree::Partial)
       if part = @fs.load p.value
-        part.visit(Renderer.new @open_tag_default, @close_tag_default, @context_stack, @fs, IndentIO.new(p.indent, @out_io))
+        part.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, IndentIO.new(p.indent, @out_io))
       end
     end
 
@@ -102,22 +102,32 @@ module Crustache
       @close_tag = d.close_tag
     end
 
-    private def context_scope(ctx : M)
-      @context_stack.unshift ctx
+    private def context_scope(ctx)
+      @context = Context.new(ctx, @context)
       yield
-      @context_stack.shift
+      @context = @context.parent as Context
       nil
     end
 
-    private def context_lookup(value : String)
-      if value == "."
-        return @context_stack[0]
-      end
+    private def context_lookup(value)
+      @context.lookup value
+    end
 
-      vals = value.split(".")
-      len = vals.length
+    class Context
+      getter parent
 
-      @context_stack.each do |ctx|
+      def initialize(@current, @parent = nil); end
+
+      def lookup(value)
+        if value == "."
+          return @current
+        end
+
+        ctx = @current
+
+        vals = value.split(".")
+        len = vals.length
+
         i = 0
         while i < len
           val = vals[i]
@@ -149,9 +159,13 @@ module Crustache
         if i == len
           return ctx
         end
-      end
 
-      nil
+        if p = @parent
+          p.lookup value
+        else
+          nil
+        end
+      end
     end
 
     class IndentIO
