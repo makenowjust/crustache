@@ -30,18 +30,14 @@ end
 ```crystal
 require "crustache"
 
-# Define a type for model
-alias Model = String | Hash(String, Model)
-
 # Parse a mustache template
 template = Crustache.parse "Hello {{Name}} World!"
 
 # Make a model
-model = {} of String => Model
-model["Name"] = "Crustache"
+model = {"Name" => "Crustache"}
 
 # Render!
-puts Crustache.render template, model as Model
+puts Crustache.render template, model
 #=> Hello Crustache World!
 ```
 
