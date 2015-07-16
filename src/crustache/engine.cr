@@ -1,10 +1,10 @@
 module Crustache
   class Engine
-    def initialize(basedir : String, cache = false)
+    def initialize(@fs : FileSystem); end
+
+    def initialize(basedir, cache = false)
       @fs = ViewLoader.new basedir, cache
     end
-
-    def initialize(@fs : FileSystem); end
 
     # It renders a template loaded from `filename` with `model`
     # and it returns rendered string.
@@ -13,8 +13,8 @@ module Crustache
       @fs.load(filename).try{|tmpl| self.render tmpl, model}
     end
 
-    def render(filename : String, model, output : IO)
-      @fs.load(filename).try{|tmpl| self.render tmpl, model, output}
+    def render(filename : String, model, io)
+      @fs.load(filename).try{|tmpl| self.render tmpl, model, io}
     end
 
     # It is a strict version `Engine#render`.
@@ -23,16 +23,16 @@ module Crustache
       @fs.load!(filename).try{|tmpl| self.render tmpl, model}
     end
 
-    def render!(filename : String, model, output : IO)
-      @fs.load!(filename).try{|tmpl| self.render tmpl, model, output}
+    def render!(filename : String, model, io)
+      @fs.load!(filename).try{|tmpl| self.render tmpl, model, io}
     end
 
-    def render(tmpl : Tree::Template, model)
+    def render(tmpl, model)
       Crustache.render tmpl, model, @fs
     end
 
-    def render(tmpl : Tree::Template, model, output : IO)
-      Crustache.render tmpl, model, @fs, output
+    def render(tmpl, model, io)
+      Crustache.render tmpl, model, @fs, io
     end
   end
 end

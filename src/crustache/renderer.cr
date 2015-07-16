@@ -6,16 +6,16 @@ require "./filesystem.cr"
 module Crustache
   # :nodoc:
   class Renderer
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context : Context, @fs : FileSystem, @out_io : IO)
+    def initialize(@open_tag, @close_tag, @context, @fs, @out_io)
       @open_tag_default = @open_tag
       @close_tag_default = @close_tag
     end
 
-    def template(t : Tree::Template)
+    def template(t)
       t.content.each &.visit(self)
     end
 
-    def section(s : Tree::Section)
+    def section(s)
       if value = context_lookup s.value
         case
         when value.is_a?(Array)
@@ -27,7 +27,7 @@ module Crustache
 
         when value.is_a?(String -> String)
           io = StringIO.new
-          t = Tree::Template.new s.content
+          t = Syntax::Template.new s.content
           t.visit Stringify.new @open_tag, @close_tag, io
           io = StringIO.new value.call io.to_s
           t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
@@ -43,7 +43,7 @@ module Crustache
       end
     end
 
-    def invert(i : Tree::Invert)
+    def invert(i)
       if value = context_lookup i.value
         if value.is_a?(Array)
           i.content.each(&.visit(self)) if value.empty?
@@ -53,7 +53,7 @@ module Crustache
       end
     end
 
-    def output(o : Tree::Output)
+    def output(o)
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = context_lookup o.value
         if value.is_a?(-> String)
@@ -69,7 +69,7 @@ module Crustache
       (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
     end
 
-    def raw(r : Tree::Raw)
+    def raw(r)
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = context_lookup r.value
         if value.is_a?(-> String)
@@ -85,19 +85,19 @@ module Crustache
       (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
     end
 
-    def partial(p : Tree::Partial)
+    def partial(p)
       if part = @fs.load p.value
         part.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, IndentIO.new(p.indent, @out_io))
       end
     end
 
-    def comment(c : Tree::Comment); end
+    def comment(c); end
 
-    def text(t : Tree::Text)
+    def text(t)
       @out_io << t.value
     end
 
-    def delim(d : Tree::Delim)
+    def delim(d)
       @open_tag = d.open_tag
       @close_tag = d.close_tag
     end
@@ -171,7 +171,7 @@ module Crustache
     class IndentIO
       include IO
 
-      def initialize(@indent : String, @io : IO)
+      def initialize(@indent, @io)
         @indent_flag = 0
         @eol_flag = true
       end
@@ -184,7 +184,7 @@ module Crustache
         @indent_flag += 1
       end
 
-      def write(s : Slice(UInt8), len)
+      def write(s, len)
         start = 0
         i = 0
         while i < len

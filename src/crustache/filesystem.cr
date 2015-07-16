@@ -1,10 +1,8 @@
 require "./tree.cr"
 
 module Crustache
-  abstract class FileSystem
-    abstract def load(value : String) : Tree::Template?
-
-    def load!(value : String) : Tree::Template
+  module FileSystem
+    def load!(value)
       if tmpl = self.load value
         return tmpl
       else
@@ -13,9 +11,11 @@ module Crustache
     end
   end
 
-  class HashFileSystem < FileSystem
+  class HashFileSystem
+    include FileSystem
+
     def initialize
-      @tmpls = {} of String => Tree::Template
+      @tmpls = {} of String => Template
     end
 
     def register(name, tmpl)
@@ -27,11 +27,13 @@ module Crustache
     end
   end
 
-  class ViewLoader < FileSystem
+  class ViewLoader
+    include FileSystem
+
     EXTENSION = [".mustache", ".html", ""]
 
-    def initialize(@basedir : String, @use_cache = false, @extension = EXTENSION)
-      @cache = {} of String => Tree::Template?
+    def initialize(@basedir, @use_cache = false, @extension = EXTENSION)
+      @cache = {} of String => Template?
     end
 
     def load(value)

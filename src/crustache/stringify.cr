@@ -3,13 +3,13 @@ require "./tree.cr"
 module Crustache
   # :nodoc:
   class Stringify
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @io); end
+    def initialize(@open_tag, @close_tag, @io); end
 
-    def template(t : Tree::Template)
+    def template(t)
       t.content.each &.visit(self)
     end
 
-    def section(s : Tree::Section)
+    def section(s)
       @io.write @open_tag
       @io << "#" << s.value
       @io.write @close_tag
@@ -19,7 +19,7 @@ module Crustache
       @io.write @close_tag
     end
 
-    def invert(i : Tree::Invert)
+    def invert(i)
       @io.write @open_tag
       @io << "#" << i.value
       @io.write @close_tag
@@ -29,35 +29,35 @@ module Crustache
       @io.write @close_tag
     end
 
-    def output(o : Tree::Output)
+    def output(o)
       @io.write @open_tag
       @io << o.value
       @io.write @close_tag
     end
 
-    def raw(r : Tree::Raw)
+    def raw(r)
       @io.write @open_tag
       @io << "&" << r.value
       @io.write @close_tag
     end
 
-    def partial(p : Tree::Partial)
+    def partial(p)
       @io.write @open_tag
       @io << ">" << p.value
       @io.write @close_tag
     end
 
-    def comment(c : Tree::Comment)
+    def comment(c)
       @io.write @open_tag
       @io << "!" << c.value
       @io.write @close_tag
     end
 
-    def text(t : Tree::Text)
+    def text(t)
       @io << t.value
     end
 
-    def delim(d : Tree::Delim)
+    def delim(d)
       @io.write @open_tag
       @io << "="
       @io.write d.open_tag

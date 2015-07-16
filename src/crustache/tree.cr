@@ -1,8 +1,5 @@
-module Crustache::Tree
-  abstract class Data
-    getter delimiter
-    setter delimiter
-
+module Crustache::Syntax
+  abstract class Node
     def initialize; end
 
     macro inherited
@@ -14,16 +11,16 @@ module Crustache::Tree
     end
   end
 
-  class Template < Data
+  class Template < Node
     getter content
 
     def initialize
-      @content = [] of Data
+      @content = [] of Node
     end
 
-    def initialize(@content : Array(Data)); end
+    def initialize(@content); end
 
-    def <<(data : Data)
+    def <<(data)
       unless data.is_a?(Text) && data.value.empty?
         @content << data
       end
@@ -44,19 +41,19 @@ module Crustache::Tree
   {% end %}
 
   {% for type in %w(Output Raw Comment Text) %}
-    class {{ type.id }} < Data
+    class {{ type.id }} < Node
       include Tag
     end
   {% end %}
 
-  class Partial < Data
+  class Partial < Node
     getter indent
     getter value
 
-    def initialize(@indent : String, @value : String); end
+    def initialize(@indent, @value); end
   end
 
-  class Delim < Data
+  class Delim < Node
     getter open_tag
     getter close_tag
 

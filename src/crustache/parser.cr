@@ -17,7 +17,7 @@ module Crustache
     EQ_SLICE = Slice(UInt8).new(1){EQ}
     CURLY_END_SLICE = Slice(UInt8).new(1){CURLY_END}
 
-    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @io : IO, @filename : String, @row = 1)
+    def initialize(@open_tag, @close_tag, @io, @filename, @row = 1)
       @peek = 0_u8
       @peek_flag = false
 
@@ -29,9 +29,9 @@ module Crustache
       @line_flag = true
     end
 
-    def parse : Tree::Template
-      tmpl = Tree::Template.new
-      tmpl_stack = [] of Tree::Template | Tree::Section | Tree::Invert
+    def parse
+      tmpl = Syntax::Template.new
+      tmpl_stack = [] of Template+
       open_tag = @open_tag
       close_tag = @close_tag
 
@@ -44,15 +44,15 @@ module Crustache
           parse_error "Unclosed tag" unless scan_until CURLY_END_SLICE, @value_io
           parse_error "Unclosed tag" unless scan close_tag
 
-          tmpl << Tree::Text.new get_text
-          tmpl << Tree::Raw.new get_value.strip
+          tmpl << Syntax::Text.new get_text
+          tmpl << Syntax::Raw.new get_value.strip
 
         when EQ          # set delimiter `{{=| |=}}`
           read
           parse_error "Unclosed tag" unless scan_until EQ_SLICE, @value_io
           parse_error "Unclosed tag" unless scan close_tag
 
-          tmpl << Tree::Text.new(get_text_as_standalone)
+          tmpl << Syntax::Text.new(get_text_as_standalone)
           value = get_value.strip
           delim = value.split(/\s+/, 2)
           parse_error "Invalid delmiter #{value.inspect}" if delim[0].match(/\s|=/)
@@ -60,29 +60,29 @@ module Crustache
 
           open_tag = delim[0].to_slice
           close_tag = delim[1].to_slice
-          tmpl << Tree::Delim.new open_tag, close_tag
+          tmpl << Syntax::Delim.new open_tag, close_tag
 
         when HASH        # section open `{{#value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Tree::Text.new get_text_as_standalone
-          tmpl = Tree::Section.new(get_value.strip).tap{|t| tmpl_stack << (tmpl << t)}
+          tmpl << Syntax::Text.new get_text_as_standalone
+          tmpl = Syntax::Section.new(get_value.strip).tap{|t| tmpl_stack << (tmpl << t)}
 
         when HAT         # invert section open `{{^value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Tree::Text.new get_text_as_standalone
-          tmpl = Tree::Invert.new(get_value.strip).tap{|t| tmpl_stack << (tmpl <<  t)}
+          tmpl << Syntax::Text.new get_text_as_standalone
+          tmpl = Syntax::Invert.new(get_value.strip).tap{|t| tmpl_stack << (tmpl <<  t)}
 
         when SLASH       # section close `{{/value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Tree::Text.new get_text_as_standalone
+          tmpl << Syntax::Text.new get_text_as_standalone
           value = get_value.strip
-          if tmpl_stack.empty? || value != (tmpl as Tree::Tag).value
+          if tmpl_stack.empty? || value != (tmpl as Syntax::Tag).value
             parse_error "Unopened tag #{value.inspect}"
           end
           tmpl = tmpl_stack.pop
@@ -91,44 +91,44 @@ module Crustache
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Tree::Text.new get_text
-          tmpl << Tree::Raw.new get_value.strip
+          tmpl << Syntax::Text.new get_text
+          tmpl << Syntax::Raw.new get_value.strip
 
         when BANG        # comment `{{!value}}`
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Tree::Text.new get_text_as_standalone
-          tmpl << Tree::Comment.new get_value
+          tmpl << Syntax::Text.new get_text_as_standalone
+          tmpl << Syntax::Comment.new get_value
 
         when GT
           read
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
           text, indent = get_text_as_standalone_with_indent
-          tmpl << Tree::Text.new text
-          tmpl << Tree::Partial.new indent, get_value.strip
+          tmpl << Syntax::Text.new text
+          tmpl << Syntax::Partial.new indent, get_value.strip
 
         else             # output `{{value}}`
           parse_error "Unclosed tag" unless scan_until close_tag, @value_io
 
-          tmpl << Tree::Text.new get_text
-          tmpl << Tree::Output.new get_value.strip
+          tmpl << Syntax::Text.new get_text
+          tmpl << Syntax::Output.new get_value.strip
 
         end
       end
 
       unless tmpl_stack.empty?
         save_row
-        parse_error "Unclosed section #{(tmpl as Tree::Tag).value.inspect}"
+        parse_error "Unclosed section #{(tmpl as Syntax::Tag).value.inspect}"
       end
 
-      tmpl << Tree::Text.new get_text
+      tmpl << Syntax::Text.new get_text
 
       tmpl
     end
 
-    private def read : UInt8?
+    private def read
       if @peek_flag
         @peek_flag = false
         return @peek
@@ -145,7 +145,7 @@ module Crustache
       end
     end
 
-    private def peek : UInt8?
+    private def peek
       if c = read
         @peek = c
         @peek_flag = true
@@ -155,7 +155,7 @@ module Crustache
       end
     end
 
-    private def scan(tag : Slice(UInt8)) : Bool
+    private def scan(tag)
       i = 0
       len = tag.length
       while i < len
@@ -168,7 +168,7 @@ module Crustache
       return true
     end
 
-    private def scan_until(tag : Slice(UInt8), out_io : IO) : Bool
+    private def scan_until(tag, out_io)
       i = 0
       len = tag.length
       text = Slice(UInt8).new len
@@ -204,12 +204,12 @@ module Crustache
       @save_row = @row
     end
 
-    private def get_text : String
+    private def get_text
       @line_flag = false
       @text_io.to_s.tap{@text_io.clear}
     end
 
-    private def get_value : String
+    private def get_value
       @value_io.to_s.tap{@value_io.clear}
     end
 
@@ -217,7 +217,7 @@ module Crustache
       get_text_as_standalone_with_indent[0]
     end
 
-    private def get_text_as_standalone_with_indent : {String, String}
+    private def get_text_as_standalone_with_indent
       unless @line_flag
         return {get_text, ""}
       end
