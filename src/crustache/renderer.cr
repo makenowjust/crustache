@@ -1,7 +1,7 @@
 require "html"
-require "./parser.cr"
-require "./tree.cr"
-require "./filesystem.cr"
+require "./parser"
+require "./tree"
+require "./filesystem"
 
 module Crustache
   # :nodoc:

@@ -1,4 +1,4 @@
-require "./tree.cr"
+require "./tree"
 
 module Crustache
   module FileSystem
