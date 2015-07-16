@@ -16,11 +16,11 @@ module Crustache
     end
 
     def section(s)
-      if value = context_lookup s.value
+      if value = @context.lookup s.value
         case
         when value.is_a?(Array)
           value.each do |ctx|
-            context_scope ctx do
+            scope ctx do
               s.content.each &.visit(self)
             end
           end
@@ -36,7 +36,7 @@ module Crustache
           @out_io << io.to_s
 
         else
-          context_scope value do
+          scope value do
             s.content.each &.visit(self)
           end
         end
@@ -44,7 +44,7 @@ module Crustache
     end
 
     def invert(i)
-      if value = context_lookup i.value
+      if value = @context.lookup i.value
         if value.is_a?(Array)
           i.content.each(&.visit(self)) if value.empty?
         end
@@ -55,7 +55,7 @@ module Crustache
 
     def output(o)
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
-      if value = context_lookup o.value
+      if value = @context.lookup o.value
         if value.is_a?(-> String)
           io = StringIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
@@ -71,7 +71,7 @@ module Crustache
 
     def raw(r)
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
-      if value = context_lookup r.value
+      if value = @context.lookup r.value
         if value.is_a?(-> String)
           io = StringIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
@@ -102,108 +102,106 @@ module Crustache
       @close_tag = d.close_tag
     end
 
-    private def context_scope(ctx)
+    private def scope(ctx)
       @context = Context.new(ctx, @context)
       yield
       @context = @context.parent as Context
       nil
     end
+  end
 
-    private def context_lookup(value)
-      @context.lookup value
-    end
+  # :nodoc:
+  class Context
+    getter parent
 
-    class Context
-      getter parent
+    def initialize(@context, @parent = nil); end
 
-      def initialize(@current, @parent = nil); end
+    def lookup(value)
+      if value == "."
+        return @context
+      end
 
-      def lookup(value)
-        if value == "."
-          return @current
-        end
+      ctx = @context
 
-        ctx = @current
+      vals = value.split(".")
+      len = vals.length
 
-        vals = value.split(".")
-        len = vals.length
-
-        i = 0
-        while i < len
-          val = vals[i]
-          case
-          when ctx.is_a?(Array)
-            if v = val.to_i?
-              if 0 <= v && v < ctx.length
-                ctx = ctx[v]
-              else
-                break
-              end
+      i = 0
+      while i < len
+        val = vals[i]
+        case
+        when ctx.is_a?(Array)
+          if v = val.to_i?
+            if 0 <= v && v < ctx.length
+              ctx = ctx[v]
             else
               break
             end
-
-          when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
-            if ctx.has_key?(val)
-              ctx = ctx[val]
-            else
-              break
-            end
-
           else
             break
           end
-          i += 1
-        end
 
-        if i == len
-          return ctx
-        end
+        when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
+          if ctx.has_key?(val)
+            ctx = ctx[val]
+          else
+            break
+          end
 
-        if p = @parent
-          p.lookup value
         else
-          nil
+          break
         end
+        i += 1
+      end
+
+      if i == len
+        return ctx
+      end
+
+      if p = @parent
+        p.lookup value
+      else
+        nil
       end
     end
+  end
 
-    class IndentIO
-      include IO
+  # :nodoc:
+  class IndentIO
+    include IO
 
-      def initialize(@indent, @io)
-        @indent_flag = 0
-        @eol_flag = true
-      end
+    def initialize(@indent, @io)
+      @indent_flag = 0
+      @eol_flag = true
+    end
 
-      def indent_flag_on
-        @indent_flag -= 1
-      end
+    def indent_flag_on
+      @indent_flag -= 1
+    end
 
-      def indent_flag_off
-        @indent_flag += 1
-      end
+    def indent_flag_off
+      @indent_flag += 1
+    end
 
-      def write(s, len)
-        start = 0
-        i = 0
-        while i < len
-          if @eol_flag
-            @io.write (s + start), (i - start)
-            @io << @indent
-            @eol_flag = false
-            start = i
-          end
-
-          if s[i] == Parser::NEWLINE_N && @indent_flag == 0
-            @eol_flag = true
-          end
-
-          i += 1
+    def write(s, len)
+      start = 0
+      i = 0
+      while i < len
+        if @eol_flag
+          @io.write (s + start), (i - start)
+          @io << @indent
+          @eol_flag = false
+          start = i
         end
 
-        @io.write (s + start), (i - start)
+        if s[i] == Parser::NEWLINE_N && @indent_flag == 0
+          @eol_flag = true
+        end
+
+        i += 1
       end
+
+      @io.write (s + start), (i - start)
     end
   end
 end
