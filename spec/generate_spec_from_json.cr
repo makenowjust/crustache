@@ -3,29 +3,27 @@ require "json"
 def inspect_hash(hash)
   if hash.is_a?(Hash)
     if hash.empty?
-      "({} of String => Type) as Type"
+      "{} of String => String"
     else
       pairs = hash.map do |key, value|
         if key == "lambda"
-          "#{key.inspect} => (#{((value as Hash(String, JSON::Type))["ruby"] as String).gsub(/^proc \{ (?:(?:\|)([^|]+)(?:\|))?/){|m, p| "->(#{p[1]? ? "#{p[1]} : String" : ""}){"}.gsub(/1/, "1; $calls.to_s").gsub(/false/, "false.to_s")} as Type)"
+          "#{key.inspect} => #{((value as Hash(String, JSON::Type))["ruby"] as String).gsub(/^proc \{ (?:(?:\|)([^|]+)(?:\|))?/){|m, p| "->(#{p[1]? ? "#{p[1]} : String" : ""}){"}.gsub(/1/, "1; $calls.to_s").gsub(/false/, "false.to_s")}"
         else
           "#{key.inspect} => #{inspect_hash value}"
         end
       end
 
-      "({#{pairs.join ","}} of String => Type) as Type"
+      "{#{pairs.join ","}}"
     end
   elsif hash.is_a?(Array)
     if hash.empty?
-      "([] of Type) as Type"
+      "[] of String"
     else
       vals = hash.map{|x| inspect_hash(x) as String}
-      "([#{vals.join ","}] of Type) as Type"
+      "[#{vals.join ","}]"
     end
-  elsif hash.is_a?(Int)
-    "#{hash.inspect}_i64 as Type"
   else
-    "#{hash.inspect} as Type"
+    "#{hash.inspect}"
   end
 end
 
@@ -50,7 +48,7 @@ puts "describe #{filename.inspect} do"
     end
   end
 
-  puts "      result = Crustache.render template, data as Type, fs"
+  puts "      result = Crustache.render template, data, fs"
   puts "      result.should eq expected"
   puts "    end"
 end
