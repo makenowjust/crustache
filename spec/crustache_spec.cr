@@ -17,9 +17,9 @@ describe Crustache do
     end
   end
 
-  describe "#parseFile" do
+  describe "#parse_file" do
     it "should parse a file" do
-      Crustache.parse("#{__DIR__}/view/template.mustache").should be_truthy
+      Crustache.parse_file("#{__DIR__}/view/template.mustache").should be_truthy
     end
   end
 

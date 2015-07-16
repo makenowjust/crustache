@@ -45,7 +45,7 @@ module Crustache
         filename = "#{@basedir}/#{value}"
         filename_ext = "#{filename}#{ext}"
         if File.exists?(filename_ext)
-          tmpl = Crustache.parseFile filename_ext
+          tmpl = Crustache.parse_file filename_ext
           @cache[value] = tmpl if @use_cache
           return tmpl
         end
