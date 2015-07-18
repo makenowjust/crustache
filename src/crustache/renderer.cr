@@ -1,6 +1,6 @@
 require "html"
 require "./parser"
-require "./tree"
+require "./syntax"
 require "./filesystem"
 
 module Crustache

@@ -1,4 +1,4 @@
-require "./tree"
+require "./syntax"
 
 module Crustache
   # :nodoc:
