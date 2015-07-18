@@ -1,3 +1,17 @@
+## v0.3.0 (2015-07-18)
+
+Features:
+
+  - Added `Crustache::Context` for solving complex model type (see [#1](https://github.com/MakeNowJust/crustache/issues/1)) [`e41a453`](https://github.com/MakeNowJust/crustache/commit/e41a453734164dd3337f325a120f11ee1975832e)
+  - Added `Crustache::DEFAULT_FILENAME` [`2d80f1c`](https://github.com/MakeNowJust/crustache/commit/2d80f1c179d21225809579fe8ebd32eaa90cfd20)
+
+Changes:
+
+  - Remove some type restrictions (see [#1](https://github.com/MakeNowJust/crustache/issues/1)) [`0b10d98`](https://github.com/MakeNowJust/crustache/commit/0b10d987a4122607c79593ba305f333de65089cf)
+  - Fixed the name of `Crustache.parse_file` from `Crustahce.parseFile` (mismatch naming) [`53dfd00`](https://github.com/MakeNowJust/crustache/commit/53dfd00f4298e9cd9f46b195e1d5e78a3459e2d3)
+  - Rename from `src/crustache/tree.cr` to `src/crustache/syntax.cr` [`f860a5a`](https://github.com/MakeNowJust/crustache/commit/f860a5a4d7a194309e38fb026cc12cd5d8941e6a)   
+    because `Crustache::Tree` is renamed to `Crustache::Syntax`
+
 ## v0.2.1 (2015-07-15)
 
 Features:
