@@ -6,7 +6,7 @@ This library implemated [mustache's spec v1.1.2+λ](https://github.com/mustache/
 
 [![travis-ci.org](https://img.shields.io/travis/MakeNowJust/crustache.svg?style=flat-square)](https://travis-ci.org/MakeNowJust/crustache)
 [![docrystal.org](http://www.docrystal.org/badge.svg)](http://www.docrystal.org/github.com/MakeNowJust/crustache)
-[![gratipay.com](//img.shields.io/gratipay/MakeNowJust.svg)](https://gratipay.com/MakeNowJust)
+[![gratipay.com](https://img.shields.io/gratipay/MakeNowJust.svg)](https://gratipay.com/MakeNowJust)
 [![flattr.com](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=make_now_just&url=https%3A%2F%2Fgithub.com%2FMakeNowJust%2Fcrustache)
 
 ```text
