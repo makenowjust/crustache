@@ -31,7 +31,7 @@ module Crustache
 
     def parse
       tmpl = Syntax::Template.new
-      tmpl_stack = [] of Template+
+      tmpl_stack = [] of Syntax::Template
       open_tag = @open_tag
       close_tag = @close_tag
 

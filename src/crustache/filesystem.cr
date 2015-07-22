@@ -15,7 +15,7 @@ module Crustache
     include FileSystem
 
     def initialize
-      @tmpls = {} of String => Template
+      @tmpls = {} of String => Syntax::Template
     end
 
     def register(name, tmpl)
@@ -33,7 +33,7 @@ module Crustache
     EXTENSION = [".mustache", ".html", ""]
 
     def initialize(@basedir, @use_cache = false, @extension = EXTENSION)
-      @cache = {} of String => Template?
+      @cache = {} of String => Syntax::Template?
     end
 
     def load(value)
