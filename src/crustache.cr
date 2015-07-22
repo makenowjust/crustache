@@ -8,8 +8,6 @@ module Crustache
 
   DEFAULT_FILENAME = "__str__"
 
-  alias Template = Syntax::Template+
-
   def self.parse(io : IO, filename = DEFAULT_FILENAME, row = 1)
     Parser.new(OPEN_TAG, CLOSE_TAG, io, filename, row).parse
   end
