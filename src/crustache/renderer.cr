@@ -18,7 +18,7 @@ module Crustache
     def section(s)
       if value = @context.lookup s.value
         case
-        when value.is_a?(Array)
+        when value.is_a?(Enumerable)
           value.each do |ctx|
             scope ctx do
               s.content.each &.visit(self)
@@ -45,7 +45,7 @@ module Crustache
 
     def invert(i)
       if value = @context.lookup i.value
-        if value.is_a?(Array)
+        if value.is_a?(Enumerable)
           i.content.each(&.visit(self)) if value.empty?
         end
       else
@@ -130,17 +130,6 @@ module Crustache
       while i < len
         val = vals[i]
         case
-        when ctx.is_a?(Array)
-          if v = val.to_i?
-            if 0 <= v && v < ctx.length
-              ctx = ctx[v]
-            else
-              break
-            end
-          else
-            break
-          end
-
         when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
           if ctx.has_key?(val)
             ctx = ctx[val]
