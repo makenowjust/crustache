@@ -4,6 +4,16 @@ require "./syntax"
 require "./filesystem"
 
 module Crustache
+  def self.render(tmpl, model, fs = HashFileSystem.new)
+    String.build do |io|
+      self.render tmpl, model, fs, io
+    end
+  end
+
+  def self.render(tmpl, model, fs, io)
+    tmpl.visit Renderer.new OPEN_TAG, CLOSE_TAG, Context.new(model), fs, io
+  end
+
   # :nodoc:
   class Renderer
     def initialize(@open_tag, @close_tag, @context, @fs, @out_io)
