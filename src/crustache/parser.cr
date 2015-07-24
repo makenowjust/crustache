@@ -57,7 +57,7 @@ module Crustache
       while scan_until open_tag, @text_io
         save_row
 
-        case c = peek
+        case peek
         when CURLY_START # raw output `{{{value}}}`
           read
           parse_error "Unclosed tag" unless scan_until CURLY_END_SLICE, @value_io
