@@ -1,3 +1,14 @@
+## v0.3.1 (2015-07-26)
+
+Features:
+
+  - Used `Enumerable` instead of `Array` as model type [`c91d35f`](https://github.com/MakeNowJust/crustache/commit/c91d35f3507e2f93f86e2632abb67f8c21722900)
+
+Changes:
+
+  - Removed `Crustache::Template` type [`ef6931c`](https://github.com/MakeNowJust/crustache/commit/ef6931c71d33ab8a6c841e30087befdb416220d9)
+  - Moved `Crustache`'s class methods to some files to fix circular reference [`a507890`](https://github.com/MakeNowJust/crustache/commit/a507890a14bd8c6d466cfd31ce043560f009f938)
+
 ## v0.3.0 (2015-07-18)
 
 Features:
