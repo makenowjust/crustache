@@ -1,4 +1,5 @@
 require "./syntax"
+require "./util"
 
 module Crustache
   # :nodoc:
@@ -176,8 +177,8 @@ module Crustache
 
     private def scan(tag)
       i = 0
-      len = tag.length
-      while i < len
+      size = Util.size(tag)
+      while i < size
         unless read == tag[i]
           return false
         end
@@ -189,9 +190,9 @@ module Crustache
 
     private def scan_until(tag, out_io)
       i = 0
-      len = tag.length
-      text = Slice(UInt8).new len
-      while i < len
+      size = Util.size(tag)
+      text = Slice(UInt8).new size
+      while i < size
         if c = read
           text[i] = c
         else
@@ -242,7 +243,7 @@ module Crustache
       end
 
       text = get_text
-      i = text.length - 1
+      i = text.size - 1
       while i >= 0
         case text[i]
         when ' ', '\t'

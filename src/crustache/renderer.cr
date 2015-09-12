@@ -2,6 +2,7 @@ require "html"
 require "./parser"
 require "./syntax"
 require "./filesystem"
+require "./util"
 
 module Crustache
   def self.render(tmpl, model, fs = HashFileSystem.new)
@@ -182,12 +183,13 @@ module Crustache
       @indent_flag += 1
     end
 
-    def write(s, len)
+    def write(s)
       start = 0
+      size = Util.size(s)
       i = 0
-      while i < len
+      while i < size
         if @eol_flag
-          @io.write (s + start), (i - start)
+          @io.write s[start, i - start]
           @io << @indent
           @eol_flag = false
           start = i
