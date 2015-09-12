@@ -196,19 +196,19 @@ module Crustache
         if c = read
           text[i] = c
         else
-          out_io.write text, i
+          out_io.write text[0, i]
           return false
         end
         i += 1
       end
 
-      until text.to_unsafe.memcmp(tag.to_unsafe, len) == 0
+      until text.to_unsafe.memcmp(tag.to_unsafe, size) == 0
         out_io.write_byte text[0]
-        text.to_unsafe.copy_from((text + 1).to_unsafe, len - 1)
+        text.to_unsafe.copy_from((text + 1).to_unsafe, size - 1)
         if c = read
-          text[len - 1] = c
+          text[size - 1] = c
         else
-          out_io.write(text, len - 1)
+          out_io.write text[0, size - 1]
           return false
         end
       end

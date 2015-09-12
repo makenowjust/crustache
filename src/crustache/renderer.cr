@@ -202,7 +202,7 @@ module Crustache
         i += 1
       end
 
-      @io.write (s + start), (i - start)
+      @io.write s[start, i - start]
     end
   end
 end
