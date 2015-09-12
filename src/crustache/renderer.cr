@@ -127,23 +127,27 @@ module Crustache
 
     def initialize(@context, @parent = nil); end
 
-    def lookup(value)
-      if value == "."
+    def lookup(key)
+      if key == "."
         return @context
       end
 
       ctx = @context
 
-      vals = value.split(".")
-      len = vals.length
+      keys = key.split(".")
+      size = keys.size
 
       i = 0
-      while i < len
-        val = vals[i]
+      while i < size
+        k = keys[i]
         case
-        when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
-          if ctx.has_key?(val)
-            ctx = ctx[val]
+        # TODO:
+        # this code dose not works in Crystal v0.7.7:
+        #   when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
+        # Perhaps it is the Crystal's bug.
+        when ctx.is_a?(Hash)
+          if ctx.has_key?(k)
+            ctx = ctx[k]
           else
             break
           end
@@ -154,12 +158,12 @@ module Crustache
         i += 1
       end
 
-      if i == len
+      if i == size
         return ctx
       end
 
       if p = @parent
-        p.lookup value
+        p.lookup key
       else
         nil
       end
