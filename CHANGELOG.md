@@ -1,3 +1,11 @@
+## v0.3.2 (2015-09-12)
+
+Changes:
+
+  - Replaced `#length` to `#size` for Crystal HEAD (see [manastech/crystal#1363](https://github.com/manastech/crystal/issues/1363)) [`89ade1a`](https://github.com/MakeNowJust/crustache/commit/89ade1a026e45517a0a0a1aac126ed21490a2094)
+  - Fixed arguments of `IO#write` for Crystal v0.7.7 [`b972686`](https://github.com/MakeNowJust/crustache/commit/b972686a2ac666000d67ed4add8fd2d7bd3e56b7)
+  - Refactored `Crustache::Context#lookup` [`fdd2b22`](https://github.com/MakeNowJust/crustache/commit/fdd2b2214b98842c90ac887a4d32364ee86e1de9)
+
 ## v0.3.1 (2015-07-26)
 
 Features:
