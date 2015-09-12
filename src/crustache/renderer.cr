@@ -145,9 +145,13 @@ module Crustache
         # this code dose not works in Crystal v0.7.7:
         #   when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
         # Perhaps it is the Crystal's bug.
-        when ctx.is_a?(Hash)
+        when ctx.responds_to?(:has_key?)
           if ctx.has_key?(k)
-            ctx = ctx[k]
+            if ctx.responds_to?(:[])
+              ctx = ctx[k]
+            else
+              break
+            end
           else
             break
           end
