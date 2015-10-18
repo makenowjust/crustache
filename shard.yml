@@ -3,3 +3,8 @@ version: 0.3.2
 
 authors:
   - TSUYUSATO Kitsune <make.just.on@gmail.com>
+
+description: |
+  {{Mustache}} for Crystal
+
+license: MIT
