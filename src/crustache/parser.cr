@@ -14,7 +14,7 @@ module Crustache
   end
 
   def self.parse(string : String, filename = DEFAULT_FILENAME, row = 1)
-    self.parse StringIO.new(string), filename, row
+    self.parse MemoryIO.new(string), filename, row
   end
 
   def self.parse_file(filename)
@@ -43,8 +43,8 @@ module Crustache
 
       @save_row = @row
 
-      @text_io = StringIO.new
-      @value_io = StringIO.new
+      @text_io = MemoryIO.new
+      @value_io = MemoryIO.new
 
       @line_flag = true
     end

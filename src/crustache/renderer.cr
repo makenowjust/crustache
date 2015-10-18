@@ -37,10 +37,10 @@ module Crustache
           end
 
         when value.is_a?(String -> String)
-          io = StringIO.new
+          io = MemoryIO.new
           t = Syntax::Template.new s.content
           t.visit Stringify.new @open_tag, @close_tag, io
-          io = StringIO.new value.call io.to_s
+          io = MemoryIO.new value.call io.to_s
           t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
           io.clear
           t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
@@ -68,7 +68,7 @@ module Crustache
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = @context.lookup o.value
         if value.is_a?(-> String)
-          io = StringIO.new value.call
+          io = MemoryIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
           io.clear
           t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
@@ -84,7 +84,7 @@ module Crustache
       (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
       if value = @context.lookup r.value
         if value.is_a?(-> String)
-          io = StringIO.new value.call
+          io = MemoryIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
           io.clear
           t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
