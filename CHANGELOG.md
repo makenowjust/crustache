@@ -1,3 +1,11 @@
+## v1.0.0 (2015-10-18)
+
+Changes:
+
+  - Replaced from `StringIO` to `MemoryIO` for Crystal v0.9.0 (see [manastech/crystal@`9b8e6c7`](https://github.com/manastech/crystal/commit/9b8e6c7e5f35b62503cd1507b1097d6c20c398dd))
+  - Support [shards](https://github.com/ysbaddaden/shards).
+  - Support [semver](http://semver.org/) to release.
+
 ## v0.3.2 (2015-09-12)
 
 Changes:
