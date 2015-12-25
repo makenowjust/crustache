@@ -1,3 +1,11 @@
+## v1.0.1 (2015-12-25)
+
+Changes:
+
+  - Support Crystal v0.10.0.
+    - `MemoryIO#clear` raised an error when it is not resizable. Fixed it.
+    - Fixed JSON type.
+
 ## v1.0.0 (2015-10-18)
 
 Changes:
