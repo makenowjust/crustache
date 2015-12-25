@@ -42,7 +42,7 @@ module Crustache
           t.visit Stringify.new @open_tag, @close_tag, io
           io = MemoryIO.new value.call io.to_s
           t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
-          io.clear
+          io = MemoryIO.new io.size
           t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
           @out_io << io.to_s
 
@@ -70,7 +70,7 @@ module Crustache
         if value.is_a?(-> String)
           io = MemoryIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
-          io.clear
+          io = MemoryIO.new io.size
           t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
           @out_io << HTML.escape io.to_s
         else
@@ -86,7 +86,7 @@ module Crustache
         if value.is_a?(-> String)
           io = MemoryIO.new value.call
           t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
-          io.clear
+          io = MemoryIO.new io.size
           t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
           @out_io << io.to_s
         else
