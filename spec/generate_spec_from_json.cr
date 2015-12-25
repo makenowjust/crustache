@@ -29,7 +29,7 @@ end
 
 filename = ARGV[0]
 
-file = (JSON.parse File.read "./spec/mustache-spec/specs/#{filename}") as Hash(String, JSON::Type)
+file = (JSON.parse File.read "./spec/mustache-spec/specs/#{filename}").as_h as Hash(String, JSON::Type)
 
 puts "describe #{filename.inspect} do"
 (file["tests"] as Array(JSON::Type)).each do |test|
