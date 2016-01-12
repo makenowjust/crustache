@@ -191,6 +191,10 @@ module Crustache
       @indent_flag += 1
     end
 
+    def read(s : Slice(UInt8))
+      raise "Unsupported"
+    end
+
     def write(s)
       start = 0
       size = Util.size(s)
