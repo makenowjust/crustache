@@ -30,7 +30,7 @@ module Crustache
   class ViewLoader < FileSystem
     EXTENSION = [".mustache", ".html", ""]
 
-    def initialize(@basedir : String, @use_cache = false : Bool, @extension = EXTENSION : Array(String))
+    def initialize(@basedir : String, @use_cache = false, @extension = EXTENSION : Array(String))
       @cache = {} of String => Syntax::Template?
     end
 
