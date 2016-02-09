@@ -19,7 +19,62 @@ describe Crustache do
 
   describe "#parse_file" do
     it "should parse a file" do
-      Crustache.parse_file("#{__DIR__}/view/template.mustache").should be_truthy
+      tmpl = Crustache.parse_file("#{__DIR__}/view/template.mustache")
+      tmpl.should be_a Crustache::Template
+    end
+  end
+
+  describe "#parse_file_static" do
+    it "should parse a file on compile time" do
+      tmpl = Crustache.parse_file_static("#{__DIR__}/view/template.mustache")
+      tmpl.should be_a Crustache::Template
+    end
+  end
+
+  describe "#loader" do
+    it "should create loader object" do
+      loader = Crustache.loader "#{__DIR__}/view/"
+
+      loader.load("template").should be_a Crustache::Template
+      loader.load("template.mustache").should be_a Crustache::Template
+      loader.load("template_html").should be_a Crustache::Template
+      loader.load("template_html.html").should be_a Crustache::Template
+      loader.load("template_test").should be_a Crustache::Template
+      loader.load("template_test.html").should be_a Crustache::Template
+    end
+
+    it "should create loader object" do
+      loader = Crustache.loader "#{__DIR__}/view"
+
+      loader.load("template").should be_a Crustache::Template
+      loader.load("template.mustache").should be_a Crustache::Template
+      loader.load("template_html").should be_a Crustache::Template
+      loader.load("template_html.html").should be_a Crustache::Template
+      loader.load("template_test").should be_a Crustache::Template
+      loader.load("template_test.html").should be_a Crustache::Template
+    end
+  end
+  describe "#loader_static" do
+    it "should create loader object on compile time" do
+      loader = Crustache.loader_static "#{__DIR__}/view/"
+
+      loader.load("template").should be_a Crustache::Template
+      loader.load("template.mustache").should be_a Crustache::Template
+      loader.load("template_html").should be_a Crustache::Template
+      loader.load("template_html.html").should be_a Crustache::Template
+      loader.load("template_test").should be_a Crustache::Template
+      loader.load("template_test.html").should be_a Crustache::Template
+    end
+
+    it "should create loader object on compile time" do
+      loader = Crustache.loader_static "#{__DIR__}/view"
+
+      loader.load("template").should be_a Crustache::Template
+      loader.load("template.mustache").should be_a Crustache::Template
+      loader.load("template_html").should be_a Crustache::Template
+      loader.load("template_html.html").should be_a Crustache::Template
+      loader.load("template_test").should be_a Crustache::Template
+      loader.load("template_test.html").should be_a Crustache::Template
     end
   end
 

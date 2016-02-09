@@ -1,3 +1,16 @@
+## v2.0.0 (2016-02-09)
+
+Features:
+
+  - Support compile time template parsing.
+  - Added `Crustache::parse_file_static` to parse Mustache file on compile time.
+  - Added `Crustache::loader` to create `FileSystem` object to use `Crustache::Engine`.
+  - Added `Crustache::loader_static`, it is compile time version of `Crustache::loader`.
+
+Changes:
+
+  - Add type annotation to class constructors for Crystal next compiler.
+
 ## v1.0.2 (2016-01-13)
 
 Changes:
