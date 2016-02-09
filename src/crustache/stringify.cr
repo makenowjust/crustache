@@ -3,7 +3,7 @@ require "./syntax"
 module Crustache
   # :nodoc:
   class Stringify
-    def initialize(@open_tag, @close_tag, @io); end
+    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @io : IO); end
 
     def template(t)
       t.content.each &.visit(self)

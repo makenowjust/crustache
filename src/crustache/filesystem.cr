@@ -1,7 +1,9 @@
 require "./syntax"
 
 module Crustache
-  module FileSystem
+  abstract class FileSystem
+    abstract def load(value) : Syntax::Template
+
     def load!(value)
       if tmpl = self.load value
         return tmpl
@@ -11,9 +13,7 @@ module Crustache
     end
   end
 
-  class HashFileSystem
-    include FileSystem
-
+  class HashFileSystem < FileSystem
     def initialize
       @tmpls = {} of String => Syntax::Template
     end
@@ -27,12 +27,10 @@ module Crustache
     end
   end
 
-  class ViewLoader
-    include FileSystem
-
+  class ViewLoader < FileSystem
     EXTENSION = [".mustache", ".html", ""]
 
-    def initialize(@basedir, @use_cache = false, @extension = EXTENSION)
+    def initialize(@basedir : String, @use_cache = false : Bool, @extension = EXTENSION : Array(String))
       @cache = {} of String => Syntax::Template?
     end
 

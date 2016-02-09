@@ -18,7 +18,7 @@ module Crustache::Syntax
       @content = [] of Node
     end
 
-    def initialize(@content); end
+    def initialize(@content : Array(Node)); end
 
     def <<(data)
       unless data.is_a?(Text) && data.value.empty?
@@ -50,13 +50,13 @@ module Crustache::Syntax
     getter indent
     getter value
 
-    def initialize(@indent, @value); end
+    def initialize(@indent : String, @value : String); end
   end
 
   class Delim < Node
     getter open_tag
     getter close_tag
 
-    def initialize(@open_tag, @close_tag); end
+    def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8)); end
   end
 end
