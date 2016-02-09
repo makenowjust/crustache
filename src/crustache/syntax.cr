@@ -26,12 +26,30 @@ module Crustache::Syntax
       end
       self
     end
+
+    def to_code(io)
+      io << "::Crustache::Syntax::Template.new(["
+      flag = false
+      @content.each do |node|
+        io << ", " if flag
+        node.to_code(io)
+        flag = true
+      end
+      io << "] of Crustache::Syntax::Node)"
+    end
   end
 
   module Tag
     getter value
 
     def initialize(@value : String); super() end
+
+    macro def to_code(io) : Nil
+      io << "::{{ @type.name.id }}.new("
+      @value.inspect io
+      io << ")"
+      nil
+    end
   end
 
   {% for type in %w(Section Invert) %}
@@ -51,6 +69,14 @@ module Crustache::Syntax
     getter value
 
     def initialize(@indent : String, @value : String); end
+
+    def to_code(io)
+      io << "::Crustache::Syntax::Partial.new("
+      @indent.inspect io
+      io << ", "
+      @value.inspect io
+      io << ")"
+    end
   end
 
   class Delim < Node
@@ -58,5 +84,13 @@ module Crustache::Syntax
     getter close_tag
 
     def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8)); end
+
+    def to_code(io)
+      io << "::Crustache::Syntax::Delim.new("
+      String.new(@open_tag).inspect io; io << ".to_slice"
+      io << ", "
+      String.new(@close_tag).inspect io; io << ".to_slice"
+      io << ")"
+    end
   end
 end
