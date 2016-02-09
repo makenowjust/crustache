@@ -56,7 +56,7 @@ module Crustache::Syntax
     class {{ type.id }} < Template
       include Tag
 
-      def initialize(@value : String, @content : [] of Node); end
+      def initialize(@value : String, @content : Array(Node)); end
 
       macro def to_code(io) : Nil
         io << "::\{{ @type.name.id }}.new("
@@ -69,7 +69,6 @@ module Crustache::Syntax
           flag = true
         end
         io << "] of ::Crustache::Syntax::Node)"
-        io << ")"
         nil
       end
     end

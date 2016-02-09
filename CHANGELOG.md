@@ -1,3 +1,9 @@
+## v2.0.1 (2016-02-10)
+
+Changes:
+
+  - Fixed a bug to represent `Section` and `Invert` by `to_code` incorrectly.
+
 ## v2.0.0 (2016-02-09)
 
 Features:
