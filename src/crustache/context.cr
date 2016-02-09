@@ -18,10 +18,10 @@ class Crustache::Context(T)
     while i < size
       k = keys[i]
       case
-        # TODO:
-        # this code dose not works in Crystal v0.7.7:
-        #   when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
-        # Perhaps it is the Crystal's bug.
+      # TODO:
+      # this code dose not works in Crystal v0.7.7:
+      #   when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
+      # Perhaps it is the Crystal's bug.
       when ctx.responds_to?(:has_key?)
         if ctx.has_key?(k)
           if ctx.responds_to?(:[])
