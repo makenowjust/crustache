@@ -35,7 +35,7 @@ module Crustache::Syntax
         node.to_code(io)
         flag = true
       end
-      io << "] of Crustache::Syntax::Node)"
+      io << "] of ::Crustache::Syntax::Node)"
     end
   end
 
@@ -55,6 +55,23 @@ module Crustache::Syntax
   {% for type in %w(Section Invert) %}
     class {{ type.id }} < Template
       include Tag
+
+      def initialize(@value : String, @content : [] of Node); end
+
+      macro def to_code(io) : Nil
+        io << "::\{{ @type.name.id }}.new("
+        @value.inspect io
+        io << ", ["
+        flag = false
+        @content.each do |node|
+          io << ", " if flag
+          node.to_code(io)
+          flag = true
+        end
+        io << "] of ::Crustache::Syntax::Node)"
+        io << ")"
+        nil
+      end
     end
   {% end %}
 
