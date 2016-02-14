@@ -12,9 +12,9 @@ This library implemated [mustache's spec v1.1.2+λ](https://github.com/mustache/
 Add this to your application's `shard.yml`:
 
 ```yaml
-development_dependencies:
-  crake:
-      github: MakeNowJust/crake
+dependencies:
+  crustache:
+      github: MakeNowJust/crustache
 ```
 
 ## Usage
