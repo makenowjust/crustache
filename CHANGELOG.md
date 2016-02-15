@@ -1,3 +1,9 @@
+## v2.1.0 (2016-02-15)
+
+Features:
+
+  - Added ECR compatible macros, `embed_mustache` and `mustache_file`.
+
 ## v2.0.1 (2016-02-10)
 
 Changes:
