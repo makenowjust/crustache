@@ -44,3 +44,13 @@ module Crustache
     tmpl.visit Renderer.new OPEN_TAG, CLOSE_TAG, Context.new(model), fs, io
   end
 end
+
+macro embed_mustache(filename, io_name, model = nil)
+  ::Crustache.render(::Crustache.parse_file_static({{ filename }}), {{ model }}, ::Crustache::HashFileSystem.new, {{ io_name.id }})
+end
+
+macro mustache_file(filename)
+  def to_s(io)
+    ::embed_mustache({{ filename }}, "io", self)
+  end
+end
