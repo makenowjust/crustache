@@ -45,12 +45,14 @@ module Crustache
   end
 end
 
-macro embed_mustache(filename, io_name, model = nil)
-  ::Crustache.render(::Crustache.parse_file_static({{ filename }}), {{ model }}, ::Crustache::HashFileSystem.new, {{ io_name.id }})
-end
+module Mustache
+  macro embed(filename, io_name, model = nil)
+    ::Crustache.render(::Crustache.parse_file_static({{ filename }}), {{ model }}, ::Crustache::HashFileSystem.new, {{ io_name.id }})
+  end
 
-macro mustache_file(filename)
-  def to_s(io)
-    ::embed_mustache({{ filename }}, "io", self)
+  macro def_to_s(filename)
+    def to_s(io)
+      ::embed_mustache({{ filename }}, "io", self)
+    end
   end
 end
