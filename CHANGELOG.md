@@ -1,3 +1,9 @@
+## v2.2.0 (2016-02-17)
+
+Features:
+
+  - Rename `embed_mustache` and `mustache_file` to `Mustache#.embed` and `Mustahce#.def_to_s`, follow Crystal v0.12.0 changes.
+
 ## v2.1.0 (2016-02-15)
 
 Features:
