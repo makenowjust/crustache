@@ -1,4 +1,3 @@
-require "html"
 require "./context"
 require "./filesystem"
 require "./indent_io"
@@ -64,9 +63,9 @@ class Crustache::Renderer
         t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
         io = MemoryIO.new io.size
         t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
-        @out_io << HTML.escape io.to_s
+        Util.escape io.to_s, @out_io
       else
-        @out_io << HTML.escape value.to_s
+        Util.escape value.to_s, @out_io
       end
     end
     (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
