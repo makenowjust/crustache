@@ -157,7 +157,7 @@ class Crustache::Parser
 
   private def scan(tag)
     i = 0
-    size = Util.size(tag)
+    size = tag.size
     while i < size
       unless read == tag[i]
         return false
@@ -170,7 +170,7 @@ class Crustache::Parser
 
   private def scan_until(tag, out_io)
     i = 0
-    size = Util.size(tag)
+    size = tag.size
     text = Slice(UInt8).new size
     while i < size
       if c = read

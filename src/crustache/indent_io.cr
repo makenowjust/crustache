@@ -23,7 +23,7 @@ class Crustache::IndentIO
 
   def write(s)
     start = 0
-    size = Util.size(s)
+    size = s.size
     i = 0
     while i < size
       if @eol_flag

@@ -1,4 +1,3 @@
-require "html"
 require "./context"
 require "./filesystem"
 require "./indent_io"
@@ -57,23 +56,32 @@ class Crustache::Renderer
   end
 
   def output(o)
-    (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_off
+    end
+
     if value = @context.lookup o.value
       if value.is_a?(-> String)
         io = MemoryIO.new value.call
         t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
         io = MemoryIO.new io.size
         t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
-        @out_io << HTML.escape io.to_s
+        Util.escape io.to_s, @out_io
       else
-        @out_io << HTML.escape value.to_s
+        Util.escape value.to_s, @out_io
       end
     end
-    (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
+
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_on
+    end
   end
 
   def raw(r)
-    (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_off
+    end
+
     if value = @context.lookup r.value
       if value.is_a?(-> String)
         io = MemoryIO.new value.call
@@ -85,7 +93,10 @@ class Crustache::Renderer
         @out_io << value.to_s
       end
     end
-    (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
+
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_on
+    end
   end
 
   def partial(p)

@@ -1,11 +1,18 @@
 # :nodoc:
 module Crustache::Util
-  # Crystal will remove Slice or Array #length (#1363)
-  def self.size(col)
-    if col.responds_to?(:length)
-      col.length
-    else
-      col.size
+  ESCAPE = {
+    '&' => "&amp;",
+    '<' => "&lt;",
+    '>' => "&gt;",
+    '"' => "&quot;",
+    '\'' => "&apos;",
+  }
+
+  # Since Crystal v0.13.0, `HTML.escape` escapes too many characters, it breaks
+  # Mustache spec compatibility. This utility method can keep it.
+  def self.escape(str, io)
+    str.each_char do |char|
+      io << ESCAPE.fetch(char, char)
     end
   end
 end
