@@ -1,3 +1,9 @@
+## v2.2.1 (2016-03-09)
+
+Changes:
+
+  - Use `Util.escape` instead of `HTML.escape` for Mustache spec compatibility.
+
 ## v2.2.0 (2016-02-17)
 
 Features:
