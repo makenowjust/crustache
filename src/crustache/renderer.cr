@@ -56,7 +56,10 @@ class Crustache::Renderer
   end
 
   def output(o)
-    (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_off
+    end
+
     if value = @context.lookup o.value
       if value.is_a?(-> String)
         io = MemoryIO.new value.call
@@ -68,11 +71,17 @@ class Crustache::Renderer
         Util.escape value.to_s, @out_io
       end
     end
-    (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
+
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_on
+    end
   end
 
   def raw(r)
-    (@out_io as IndentIO).indent_flag_off if @out_io.is_a?(IndentIO)
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_off
+    end
+
     if value = @context.lookup r.value
       if value.is_a?(-> String)
         io = MemoryIO.new value.call
@@ -84,7 +93,10 @@ class Crustache::Renderer
         @out_io << value.to_s
       end
     end
-    (@out_io as IndentIO).indent_flag_on if @out_io.is_a?(IndentIO)
+
+    if (out_io = @out_io).is_a?(IndentIO)
+      out_io.indent_flag_on
+    end
   end
 
   def partial(p)
