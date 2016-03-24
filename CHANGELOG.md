@@ -1,3 +1,9 @@
+## v2.2.2 (2016-03-24)
+
+Changes:
+
+  - Fixed type annotated default argument syntax, follow Crystal v0.14.1 changes.
+
 ## v2.2.1 (2016-03-09)
 
 Changes:
