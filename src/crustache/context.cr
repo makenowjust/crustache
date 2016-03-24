@@ -2,7 +2,7 @@
 class Crustache::Context(T)
   getter parent
 
-  def initialize(@context : T, @parent = nil : Context?); end
+  def initialize(@context : T, @parent : Context? = nil); end
 
   def lookup(key)
     if key == "."

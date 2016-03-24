@@ -17,7 +17,7 @@ class Crustache::Parser
   EQ_SLICE = Slice(UInt8).new(1){EQ}
   CURLY_END_SLICE = Slice(UInt8).new(1){CURLY_END}
 
-  def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @io : IO, @filename : String, @row = 1 : Int32)
+  def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @io : IO, @filename : String, @row : Int32 = 1)
     @peek = 0_u8
     @peek_flag = false
 
