@@ -17,7 +17,7 @@ describe Crustache::ViewLoader do
   end
 
   it "should load a template file without an extension" do
-    fs = Crustache::ViewLoader.new "#{__DIR__}/view", extension = [".test"]
+    fs = Crustache::ViewLoader.new "#{__DIR__}/view", use_cache: false, extension: [".test"]
     fs.load("template_test").should be_truthy
   end
 
