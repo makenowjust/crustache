@@ -21,7 +21,7 @@ module Crustache::Syntax
     def initialize(@content : Array(Node)); end
 
     def <<(data)
-      unless data.is_a?(Text) && data.value.empty?
+      unless data.is_a?(Text) && data.value.not_nil!.empty?
         @content << data
       end
       self
@@ -56,7 +56,7 @@ module Crustache::Syntax
     class {{ type.id }} < Template
       include Tag
 
-      def initialize(@value : String, @content : Array(Node)); end
+      def initialize(@value : String, @content = [] of Node); end
 
       macro def to_code(io) : Nil
         io << "::\{{ @type.name.id }}.new("
