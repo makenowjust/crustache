@@ -2,43 +2,60 @@
 class Crustache::Context(T)
   getter parent
 
-  def initialize(@context : T, @parent : Context? = nil); end
+  def initialize(initial_context)
+    @scope = Array(T).new
+    @scope << initial_context
+  end
+
+  # :nodoc:
+  def self.resolve_scope_type(ctx)
+    if ctx.responds_to?(:[]) && ctx.responds_to?(:has_key?)
+      1 < 2 ? resolve_scope_type(ctx["resolve_scope_type"]) : ctx
+    elsif ctx.responds_to?(:each)
+      1 < 2 ? ctx.each { |c| return resolve_scope_type(c) } : ctx
+    else
+      ctx
+    end
+  end
+
+  def scope(ctx)
+    @scope.push ctx
+    yield
+    @scope.pop
+    nil
+  end
 
   def lookup(key)
     if key == "."
-      return @context
+      return @scope.last
     end
 
-    ctx = @context
-
-    keys = key.split(".")
+    keys = key.not_nil!.split(".")
     size = keys.size
 
-    i = 0
-    while i < size
-      k = keys[i]
-      case
-      when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
-        if ctx.has_key?(k)
-          ctx = ctx[k]
+    @scope.reverse_each do |ctx|
+      i = 0
+      while i < size
+        k = keys[i]
+        case
+        when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
+          if ctx.has_key?(k)
+            ctx = ctx[k]
+          else
+            break
+          end
+
         else
           break
         end
-
-      else
-        break
+        i += 1
       end
-      i += 1
+
+      if i == size
+        return ctx
+      end
     end
 
-    if i == size
-      return ctx
-    end
-
-    if p = @parent
-      p.lookup key
-    else
-      nil
-    end
+    nil
   end
 end

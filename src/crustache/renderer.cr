@@ -7,8 +7,8 @@ require "./syntax"
 require "./util"
 
   # :nodoc:
-class Crustache::Renderer
-  def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context : Context, @fs : FileSystem, @out_io : IO)
+class Crustache::Renderer(T)
+  def initialize(@open_tag : Slice(UInt8), @close_tag : Slice(UInt8), @context : Context(T), @fs : FileSystem, @out_io : IO)
     @open_tag_default = @open_tag
     @close_tag_default = @close_tag
   end
@@ -117,10 +117,9 @@ class Crustache::Renderer
   end
 
   private def scope(ctx)
-    @context = Context.new(ctx, @context)
-    yield
-    @context = @context.parent as Context
-    nil
+    @context.scope(ctx) do
+      yield
+    end
   end
 end
 

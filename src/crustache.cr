@@ -41,7 +41,7 @@ module Crustache
   end
 
   def self.render(tmpl, model, fs, io)
-    tmpl.visit Renderer.new OPEN_TAG, CLOSE_TAG, Context.new(model), fs, io
+    tmpl.visit Renderer.new OPEN_TAG, CLOSE_TAG, Context(typeof(Context.resolve_scope_type(model))).new(model), fs, io
   end
 end
 
