@@ -1,3 +1,10 @@
+## v2.2.3 (2016-05-12)
+
+Changes:
+
+  - Added type annotations to instance variables to follow Crystal v0.16.0 changes.
+  - Fixed `Crustache::Context` type for above.
+
 ## v2.2.2 (2016-03-24)
 
 Changes:
