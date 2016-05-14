@@ -30,7 +30,7 @@ class Crustache::Context(T)
       return @scope.last
     end
 
-    keys = key.not_nil!.split(".")
+    keys = key.split(".")
     size = keys.size
 
     @scope.reverse_each do |ctx|

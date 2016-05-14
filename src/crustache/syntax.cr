@@ -14,11 +14,7 @@ module Crustache::Syntax
   class Template < Node
     getter content
 
-    def initialize
-      @content = [] of Node
-    end
-
-    def initialize(@content : Array(Node)); end
+    def initialize(@content = [] of Node); end
 
     def <<(data)
       unless data.is_a?(Text) && data.value.not_nil!.empty?
@@ -40,7 +36,7 @@ module Crustache::Syntax
   end
 
   module Tag
-    getter value
+    getter! value
 
     def initialize(@value : String); super() end
 
