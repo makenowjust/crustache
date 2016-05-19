@@ -82,7 +82,7 @@ class Crustache::Parser
 
         tmpl << Syntax::Text.new get_text_as_standalone
         value = get_value.strip
-        if tmpl_stack.empty? || value != (tmpl as Syntax::Tag).value
+        if tmpl_stack.empty? || value != tmpl.as(Syntax::Tag).value
           parse_error "Unopened tag #{value.inspect}"
         end
         tmpl = tmpl_stack.pop
@@ -120,7 +120,7 @@ class Crustache::Parser
 
     unless tmpl_stack.empty?
       save_row
-      parse_error "Unclosed section #{(tmpl as Syntax::Tag).value.inspect}"
+      parse_error "Unclosed section #{tmpl.as(Syntax::Tag).value.inspect}"
     end
 
     tmpl << Syntax::Text.new get_text
