@@ -1,3 +1,9 @@
+## v2.2.4 (2016-05-19)
+
+Changes:
+
+  - Support Crysyal v0.17.0.
+
 ## v2.2.3 (2016-05-12)
 
 Changes:
