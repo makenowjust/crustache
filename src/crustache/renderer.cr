@@ -28,12 +28,12 @@ class Crustache::Renderer(T)
         end
 
       when value.is_a?(String -> String)
-        io = MemoryIO.new
+        io = IO::Memory.new
         t = Syntax::Template.new s.content
         t.visit Stringify.new @open_tag, @close_tag, io
-        io = MemoryIO.new value.call io.to_s
+        io = IO::Memory.new value.call io.to_s
         t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
-        io = MemoryIO.new io.size
+        io = IO::Memory.new io.size
         t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
         @out_io << io.to_s
 
@@ -62,9 +62,9 @@ class Crustache::Renderer(T)
 
     if value = @context.lookup o.value
       if value.is_a?(-> String)
-        io = MemoryIO.new value.call
+        io = IO::Memory.new value.call
         t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
-        io = MemoryIO.new io.size
+        io = IO::Memory.new io.size
         t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
         Util.escape io.to_s, @out_io
       else
@@ -84,9 +84,9 @@ class Crustache::Renderer(T)
 
     if value = @context.lookup r.value
       if value.is_a?(-> String)
-        io = MemoryIO.new value.call
+        io = IO::Memory.new value.call
         t = Parser.new(@open_tag_default, @close_tag_default, io, value.to_s).parse
-        io = MemoryIO.new io.size
+        io = IO::Memory.new io.size
         t.visit(Renderer.new @open_tag_default, @close_tag_default, @context, @fs, io)
         @out_io << io.to_s
       else

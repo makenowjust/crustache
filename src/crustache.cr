@@ -15,7 +15,7 @@ module Crustache
   end
 
   def self.parse(string : String, filename = DEFAULT_FILENAME, row = 1)
-    self.parse MemoryIO.new(string), filename, row
+    self.parse IO::Memory.new(string), filename, row
   end
 
   def self.parse_file(filename)

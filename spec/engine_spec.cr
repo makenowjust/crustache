@@ -25,7 +25,7 @@ describe Crustache::Engine do
       fs = Crustache::HashFileSystem.new
       fs.register "test", Crustache.parse "Test {{.}}"
       engine = Crustache::Engine.new fs
-      output = MemoryIO.new
+      output = IO::Memory.new
       engine.render("test", "Test", output)
       output.to_s.should eq("Test Test")
     end

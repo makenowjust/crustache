@@ -23,8 +23,8 @@ class Crustache::Parser
 
     @save_row = @row
 
-    @text_io = MemoryIO.new
-    @value_io = MemoryIO.new
+    @text_io = IO::Memory.new
+    @value_io = IO::Memory.new
 
     @line_flag = true
   end

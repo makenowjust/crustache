@@ -7,7 +7,7 @@ describe Crustache do
     end
 
     it "should parse a IO" do
-      Crustache.parse(MemoryIO.new "Hello, {{Mustache}} World").should be_truthy
+      Crustache.parse(IO::Memory.new "Hello, {{Mustache}} World").should be_truthy
     end
 
     it "raise a parse error" do
