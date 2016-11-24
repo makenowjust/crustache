@@ -20,7 +20,7 @@ class Crustache::Renderer(T)
   def section(s)
     if value = @context.lookup s.value
       case
-      when value.is_a?(Enumerable)
+      when value.is_a?(Indexable)
         value.each do |ctx|
           scope ctx do
             s.content.each &.visit(self)
