@@ -10,9 +10,9 @@ class Crustache::Context(T)
   # :nodoc:
   def self.resolve_scope_type(ctx)
     if ctx.responds_to?(:[]) && ctx.responds_to?(:has_key?)
-      1 < 2 ? resolve_scope_type(ctx["resolve_scope_type"]) : ctx
-    elsif ctx.responds_to?(:each)
-      1 < 2 ? ctx.each { |c| return resolve_scope_type(c) } : ctx
+      resolve_scope_type(ctx["resolve_scope_type"]) || ctx
+    elsif ctx.is_a?(Indexable)
+      ctx.each { |c| return resolve_scope_type(c) } || ctx
     else
       ctx
     end
