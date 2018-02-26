@@ -1,8 +1,7 @@
 require "./parser"
 
 # :nodoc:
-class Crustache::IndentIO
-  include IO
+class Crustache::IndentIO < IO
 
   def initialize(@indent : String, @io : IO)
     @indent_flag = 0
