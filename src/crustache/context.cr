@@ -45,6 +45,13 @@ class Crustache::Context(T)
             break
           end
 
+        when ctx.responds_to?(:[]?) && ! ctx.is_a?(Array)
+          if ctx[k]?
+            ctx = ctx[k]
+          else
+            break
+          end
+
         else
           break
         end
