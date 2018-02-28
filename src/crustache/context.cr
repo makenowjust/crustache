@@ -19,6 +19,7 @@ class Crustache::Context(T)
   end
 
   def scope(ctx)
+    return if ctx.nil?
     @scope.push ctx
     yield
     @scope.pop
