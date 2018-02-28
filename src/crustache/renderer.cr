@@ -47,7 +47,7 @@ class Crustache::Renderer(T)
 
   def invert(i)
     if value = @context.lookup i.value
-      if value.is_a?(Enumerable)
+      if value.is_a?(Enumerable) && value.responds_to?(:empty?)
         i.content.each(&.visit(self)) if value.empty?
       end
     else
@@ -122,4 +122,3 @@ class Crustache::Renderer(T)
     end
   end
 end
-

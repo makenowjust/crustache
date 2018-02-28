@@ -19,6 +19,7 @@ class Crustache::Context(T)
   end
 
   def scope(ctx)
+    return if ctx.nil?
     @scope.push ctx
     yield
     @scope.pop
@@ -40,6 +41,13 @@ class Crustache::Context(T)
         case
         when ctx.responds_to?(:has_key?) && ctx.responds_to?(:[])
           if ctx.has_key?(k)
+            ctx = ctx[k]
+          else
+            break
+          end
+
+        when ctx.responds_to?(:[]?) && ! ctx.is_a?(Array)
+          if ctx[k]?
             ctx = ctx[k]
           else
             break

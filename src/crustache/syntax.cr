@@ -40,13 +40,15 @@ module Crustache::Syntax
 
     def initialize(@value : String); super() end
 
-    macro def to_code(io) : Nil
-      {% begin %}
-        io << "::{{ @type.name.id }}.new("
-        @value.inspect io
-        io << ")"
-        nil
-      {% end %}
+    macro def_to_code
+      def to_code(io) : Nil
+        {% begin %}
+          io << "::{{ @type.name.id }}.new("
+          @value.inspect io
+          io << ")"
+          nil
+        {% end %}
+      end
     end
   end
 
@@ -56,27 +58,33 @@ module Crustache::Syntax
 
       def initialize(@value : String, @content = [] of Node); end
 
-      macro def to_code(io) : Nil
-        \{% begin %}
-          io << "::\{{ @type.name.id }}.new("
-          @value.inspect io
-          io << ", ["
-          flag = false
-          @content.each do |node|
-            io << ", " if flag
-            node.to_code(io)
-            flag = true
-          end
-          io << "] of ::Crustache::Syntax::Node)"
-          nil
-        \{% end %}
+      macro def_to_code
+        def to_code(io) : Nil
+          \{% begin %}
+            io << "::\{{ @type.name.id }}.new("
+            @value.inspect io
+            io << ", ["
+            flag = false
+            @content.each do |node|
+              io << ", " if flag
+              node.to_code(io)
+              flag = true
+            end
+            io << "] of ::Crustache::Syntax::Node)"
+            nil
+          \{% end %}
+        end
       end
+
+      def_to_code
     end
   {% end %}
 
   {% for type in %w(Output Raw Comment Text) %}
     class {{ type.id }} < Node
       include Tag
+
+      def_to_code
     end
   {% end %}
 
