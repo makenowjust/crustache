@@ -40,7 +40,7 @@ module Crustache::Syntax
 
     def initialize(@value : String); super() end
 
-    macro def to_code(io) : Nil
+    def to_code(io) : Nil
       {% begin %}
         io << "::{{ @type.name.id }}.new("
         @value.inspect io
@@ -56,7 +56,7 @@ module Crustache::Syntax
 
       def initialize(@value : String, @content = [] of Node); end
 
-      macro def to_code(io) : Nil
+      def to_code(io) : Nil
         \{% begin %}
           io << "::\{{ @type.name.id }}.new("
           @value.inspect io
