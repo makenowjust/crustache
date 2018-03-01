@@ -1,3 +1,9 @@
+## v2.4.0 (2018-03-01)
+
+Changes:
+
+  - Support Crystal v0.24.1.
+
 ## v2.3.0 (2016-11-24)
 
 Changes:
