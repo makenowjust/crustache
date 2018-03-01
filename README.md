@@ -14,7 +14,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   crustache:
-      github: MakeNowJust/crustache
+    github: MakeNowJust/crustache
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ This library's specs are put in `spec` directory. They can run by `crystal spec 
 
 ## Contributing
 
-1. Fork it ([https://github.com/MakeNowJust/crustache/fork](https://github.com/MakeNowJust/crustache/fork))
+1. [Fork it](https://github.com/MakeNowJust/crustache/fork)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
