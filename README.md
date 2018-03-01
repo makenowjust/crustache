@@ -45,6 +45,11 @@ This library's specs are put in `spec` directory. They can run by `crystal spec 
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
+## License
+
+MIT
+© TSUYUSATO "[MakeNowJust](https://quine.codes)" Kitsune <<make.just.on@gmail.com>> 2015-2018
+
 ## Contributors
 
 - [@MakeNowJust](https://github.com/MakeNowJust) TSUYUSATO Kitsune - creator, maintainer
