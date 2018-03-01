@@ -42,7 +42,7 @@ describe Crustache::Engine do
     it "should raise an error" do
       fs = Crustache::HashFileSystem.new
       engine = Crustache::Engine.new fs
-      expect_raises do
+      expect_raises Exception do
         engine.render!("test", "Test")
       end
     end
