@@ -35,7 +35,8 @@ puts Crustache.render template, model
 
 ## Development
 
-This library's specs are put in `spec` directory. They can run by `crystal spec ./spec/spec.cr` command.
+This library's specs are put in `spec` directory.
+They can run by `crystal spec spec` command.
 
 ## Contributing
 
