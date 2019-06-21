@@ -33,6 +33,22 @@ puts Crustache.render template, model
 #=> Hello Crustache World!
 ```
 
+### Nested Models
+
+```crystal
+require "crustache"
+
+# Parse a mustache template
+template = Crustache.parse "Hello {{adjective.size}}, {{adjective.color}} World!"
+
+# Make a model
+model = {"adjective" => {"color" => "blue", "size" => "large"}}
+
+# Render!
+puts Crustache.render template, model
+#=> Hello large, blue World!
+```
+
 ## Development
 
 **NOTE:** Please run `git submodule update --init` before running spec.
