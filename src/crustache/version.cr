@@ -1,3 +1,3 @@
 module Crustache
-  VERSION = "2.3.0"
+  VERSION = "2.4.1"
 end
