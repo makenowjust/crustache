@@ -20,7 +20,7 @@ class Crustache::IndentIO < IO
     raise "Unsupported"
   end
 
-  def write(s)
+  def write(s) : Nil
     start = 0
     size = s.size
     i = 0

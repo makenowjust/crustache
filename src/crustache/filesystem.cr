@@ -2,7 +2,7 @@ require "./syntax"
 
 module Crustache
   abstract class FileSystem
-    abstract def load(value) : Syntax::Template
+    abstract def load(value) : Syntax::Template?
 
     def load!(value)
       if tmpl = self.load value
@@ -22,7 +22,7 @@ module Crustache
       @tmpls[name] = tmpl
     end
 
-    def load(value)
+    def load(value) : Syntax::Template?
       return @tmpls[value]?
     end
   end
@@ -34,7 +34,7 @@ module Crustache
       @cache = {} of String => Syntax::Template?
     end
 
-    def load(value)
+    def load(value) : Syntax::Template?
       if @cache.has_key?(value)
         return @cache[value]
       end
