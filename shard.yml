@@ -7,6 +7,6 @@ authors:
 description: |
   {{Mustache}} for Crystal
 
-crystal: >= 0.31.1, < 1.0.0
+crystal: 0.34.0
 
 license: MIT
