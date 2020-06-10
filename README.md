@@ -51,7 +51,7 @@ They can run by `crystal spec` command.
 ## License
 
 MIT
-© TSUYUSATO "[MakeNowJust](https://quine.codes)" Kitsune <<make.just.on@gmail.com>> 2015-2018
+© TSUYUSATO "[MakeNowJust](https://quine.codes)" Kitsune <<make.just.on@gmail.com>> 2015-2020
 
 ## Contributors
 
