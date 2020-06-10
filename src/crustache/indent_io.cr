@@ -2,7 +2,6 @@ require "./parser"
 
 # :nodoc:
 class Crustache::IndentIO < IO
-
   def initialize(@indent : String, @io : IO)
     @indent_flag = 0
     @eol_flag = true
@@ -20,25 +19,27 @@ class Crustache::IndentIO < IO
     raise "Unsupported"
   end
 
-  def write(s) : Nil
-    start = 0
-    size = s.size
-    i = 0
-    while i < size
-      if @eol_flag
-        @io.write s[start, i - start]
-        @io << @indent
-        @eol_flag = false
-        start = i
+  {% begin %}
+    def write(s) : {% if compare_versions(Crystal::VERSION, "0.35.0") >= 0 %}Int64{% else %}Nil{% end %}
+      start = 0
+      size = s.size
+      i = 0
+      while i < size
+        if @eol_flag
+          @io.write s[start, i - start]
+          @io << @indent
+          @eol_flag = false
+          start = i
+        end
+
+        if s[i] == Parser::NEWLINE_N && @indent_flag == 0
+          @eol_flag = true
+        end
+
+        i += 1
       end
 
-      if s[i] == Parser::NEWLINE_N && @indent_flag == 0
-        @eol_flag = true
-      end
-
-      i += 1
+      @io.write s[start, i - start]
     end
-
-    @io.write s[start, i - start]
-  end
+  {% end %}
 end
