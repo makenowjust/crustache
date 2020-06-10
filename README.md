@@ -38,7 +38,7 @@ puts Crustache.render template, model
 **NOTE:** Please run `git submodule update --init` before running spec.
 
 This library's specs are put in `spec` directory.
-They can run by `crystal spec spec` command.
+They can run by `crystal spec` command.
 
 ## Contributing
 
