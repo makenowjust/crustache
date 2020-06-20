@@ -20,7 +20,7 @@ class Crustache::IndentIO < IO
   end
 
   {% begin %}
-    def write(s) : {% if compare_versions(Crystal::VERSION, "0.35.0") >= 0 %}Int64{% else %}Nil{% end %}
+    def write(s) : {% if compare_versions(Crystal::VERSION, "0.35.0") >= 0 %}Int64|Nil{% else %}Nil{% end %}
       start = 0
       size = s.size
       i = 0
