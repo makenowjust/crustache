@@ -1,3 +1,9 @@
+## v2.4.3 (2020-06-21)
+
+Changes:
+
+  - Support Crystal v0.35.1 ([#29](https://github.com/MakeNowJust/crustache/pull/29), thanks @waghanza)
+
 ## v2.4.2 (2020-06-10)
 
 Changes:
