@@ -1,3 +1,9 @@
+## v2.4.4 (2021-06-08)
+
+Changes:
+
+  - Update supported Crystal version to 1.0.0
+
 ## v2.4.3 (2020-06-21)
 
 Changes:
