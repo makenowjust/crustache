@@ -1,0 +1,37 @@
+overview: |
+  Lambdas are a special-cased data type for use in interpolations and
+  sections.
+
+  When used as the data value for a Section tag, the lambda MAY be treatable
+  as an arity 2 function, and invoked as such (passing a String containing the
+  unprocessed section contents, and a Proc as renderer).  The returned value
+  MUST be rendered against the current delimiters, then interpolated in place
+  of the section.
+tests:
+  - name: Section - Renderer
+    desc: Lambda used for sections can receive renderer.
+    data:
+      x: 'rendered'
+      lambda: !code
+        crystal: '->(text : String, render : String -> String) { render.call(text) == "rendered" ? "yes" : "no" }'
+    template: "<{{#lambda}}{{x}}{{/lambda}}>"
+    expected: "<yes>"
+
+  - name: Section - Renderer - Scoped
+    desc: Renderer provided to lambda should be scoped.
+    data:
+      scope:
+        inner: 'scoped'
+      lambda: !code
+        crystal: '->(text : String, render : String -> String) { "#{text}#{render.call("context:{{inner}}")}#{text}" }'
+    template: "<{{#scope}}{{#lambda}}-{{/lambda}}{{/scope}}>"
+    expected: "<-context:scoped->"
+
+  - name: Section - Renderer - Alternate Delimiters
+    desc: Renderer provided to lambda should should parse with the current delimiters.
+    data:
+      planet: "Earth"
+      lambda: !code
+        crystal: '->(text : String, render : String -> String) { "#{text}#{render.call("{{planet}} => |planet|")}#{text}" }'
+    template: "{{= | | =}}<|#lambda|-|/lambda|>"
+    expected: "<-{{planet}} => Earth->"
