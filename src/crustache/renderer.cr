@@ -37,6 +37,23 @@ class Crustache::Renderer(T)
         t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
         @out_io << io.to_s
 
+      # lambda accepting render function
+      when value.is_a?((String, (String -> String)) -> String)
+        io = IO::Memory.new
+        t = Syntax::Template.new s.content
+        t.visit Stringify.new @open_tag, @close_tag, io
+        io = IO::Memory.new value.call io.to_s, ->(s : String) {
+          io = IO::Memory.new s
+          t = Parser.new(@open_tag, @close_tag, io, s).parse
+          io = IO::Memory.new io.size
+          t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
+          io.to_s
+        }
+        t = Parser.new(@open_tag, @close_tag, io, value.to_s).parse
+        io = IO::Memory.new io.size
+        t.visit(Renderer.new @open_tag, @close_tag, @context, @fs, io)
+        @out_io << io.to_s
+
       else
         scope value do
           s.content.each &.visit(self)

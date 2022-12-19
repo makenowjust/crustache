@@ -7,10 +7,14 @@ def inspect_any(any)
     else
       pairs = hash.map do |key, value|
         if key == "lambda"
-          ruby_proc = value.as_h["ruby"].as_s
-          crystal_proc = ruby_proc
-            .gsub(/^proc \{ (?:(?:\|)([^|]+)(?:\|))?/){|m, p| "->(#{p[1]? ? "#{p[1]} : String" : ""}){"}
-            .gsub(/\$/, "Global.").gsub(/1/, "1; Global.calls.to_s").gsub(/false/, "false.to_s")
+          languages = value.as_h
+          crystal_proc = if languages.has_key? "crystal"
+                           languages["crystal"].as_s
+                         else
+                           languages["ruby"].as_s
+                             .gsub(/^proc \{ (?:(?:\|)([^|]+)(?:\|))?/){|m, p| "->(#{p[1]? ? "#{p[1]} : String" : ""}){"}
+                             .gsub(/\$/, "Global.").gsub(/1/, "1; Global.calls.to_s").gsub(/false/, "false.to_s")
+                         end
           "#{key.inspect} => #{crystal_proc}"
         else
           "#{key.inspect} => #{inspect_any value}"
@@ -31,9 +35,10 @@ def inspect_any(any)
   end
 end
 
-filename = ARGV[0]
+spec_path = ARGV[0]
+filename = ARGV[1]
 
-file = (JSON.parse File.read "./spec/mustache-spec/specs/#{filename}").as_h
+file = (JSON.parse File.read "./spec/#{spec_path}/#{filename}").as_h
 
 puts "describe #{filename.inspect} do"
 file["tests"].as_a.each do |test|
