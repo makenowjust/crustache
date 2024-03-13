@@ -4,7 +4,7 @@ crustache is the implementation of __[mustache](https://mustache.github.io/)__ l
 
 This library implemated [mustache's spec v1.1.2+λ](https://github.com/mustache/spec/tree/v1.1.2).
 
-[![travis-ci.org](https://img.shields.io/travis/MakeNowJust/crustache.svg?style=flat-square)](https://travis-ci.org/MakeNowJust/crustache)
+[![test](https://github.com/makenowjust/crustache/actions/workflows/test.yml/badge.svg)](https://github.com/makenowjust/crustache/actions/workflows/test.yml)
 <!-- [![docrystal.org](http://www.docrystal.org/badge.svg)](http://www.docrystal.org/github.com/MakeNowJust/crustache) -->
 
 ## Installation
