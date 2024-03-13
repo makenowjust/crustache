@@ -1,0 +1,19 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "45 3 * * 6" # Runs at 03:45, only on Saturday
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: latest
+      - run: crystal spec
